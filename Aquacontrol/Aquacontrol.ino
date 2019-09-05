@@ -9,6 +9,7 @@
 
 // Examples: https://techtutorialsx.com/2017/04/09/esp8266-connecting-to-mqtt-broker/
 //           https://randomnerdtutorials.com/esp32-ntp-client-date-time-arduino-ide/
+//           https://www.esp8266.com/viewtopic.php?f=160&t=17549
 
 OneWire             oneWire(SENS_THERM);    // Instance OneWire bus for Temp Sensor
 DallasTemperature   TempSensor(&oneWire);   // Instance Temp Sensor
@@ -20,6 +21,18 @@ PubSubClient        mqtt_client(espClient);
 
 
 /* FUNCTIONS DECLARATION   */
+
+void Relay_Default() {
+  pinMode(RELAY_LAMP, OUTPUT);
+  pinMode(RELAY_AERA, OUTPUT);
+  pinMode(RELAY_HEAT, OUTPUT);
+  pinMode(RELAY_FILT, OUTPUT);
+  digitalWrite(RELAY_LAMP, LOW);
+  digitalWrite(RELAY_AERA, LOW);
+  digitalWrite(RELAY_HEAT, LOW);
+  digitalWrite(RELAY_FILT, LOW);
+}
+
 // WiFi_Setup
 // Initiates WiFi Connectivity to predefined SSID
 void WiFi_Setup() {
@@ -47,7 +60,7 @@ void WiFi_Setup() {
 // MQTT_callback
 // Handles incoming messages for the topics subscribed
 void mqtt_callback(char* topic, byte* payload, unsigned int length) {
- 
+  #ifdef AQU_DEBUG
   Serial.print("Message arrived in topic: ");
   Serial.println(topic);
  
@@ -58,7 +71,7 @@ void mqtt_callback(char* topic, byte* payload, unsigned int length) {
  
   Serial.println();
   Serial.println("-----------------------");
- 
+  #endif
 }
 
 // MQTT_Setup
@@ -84,18 +97,25 @@ void MQTT_Setup() {
 
 void setResetTime() {
   String  timeString;
+  int     i_datetime = 0;
   // Send reset time
   timeClient.update();
   timeString = timeClient.getFormattedDate();
-  Serial.println(timeString);
+  i_datetime = timeString.indexOf("T");
+  Serial.print("DATE: ");
+  Serial.print(timeString.substring(0,i_datetime));
+  Serial.print(" | TIME (GMT+1): ");
+  Serial.println(timeString.substring(i_datetime+1, timeString.length()-1));
   mqtt_client.publish("aquarium/reset", timeString.c_str());
 }
 
 /*  ARDUINO SETUP   */
 void setup() {
   // put your setup code here, to run once:
+  Relay_Default();
   Serial.begin(SERIAL_SPEED);
   RTClock.begin();
+  TempSensor.begin();
   WiFi_Setup();
   timeClient.begin();
   MQTT_Setup();
