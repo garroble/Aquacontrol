@@ -1,0 +1,22 @@
+#ifndef   _AQUACONTROL_
+#define   _AQUACONTROL_
+
+#define   RELAY_LAMP    (4)
+#define   RELAY_AERA    (5)
+#define   RELAY_HEAT    (12)
+#define   RELAY_FILT    (13)
+#define   SENS_THERM    (16)
+#define   SERIAL_SPEED  (115200)
+#define   GMTp1_OFF     (3600)
+
+// WIFI to connect the ESP8266
+const char*     wifi_ssid   = "..........";
+const char*     wifi_pass   = "..........";
+
+// MQTT Server - CloudMQTT
+const char*     mqtt_server = "farmer.cloudmqtt.com";
+const uint16_t  mqtt_port   = 17344;
+const char*     mqtt_user   = "..........";
+const char*     mqtt_pass   = "..........";
+
+#endif
