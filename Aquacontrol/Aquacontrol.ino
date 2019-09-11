@@ -4,6 +4,7 @@
 #include <DS3231M.h>            // https://github.com/SV-Zanshin/DS3231M
 #include <ESP8266WiFi.h>        // https://arduino-esp8266.readthedocs.io/en/latest/
 #include <WiFiUdp.h>
+#include <ArduinoOTA.h>
 #include <NTPClient.h>          // https://github.com/taranais/NTPClient
 #include <PubSubClient.h>       // https://pubsubclient.knolleary.net/
 
@@ -15,7 +16,7 @@ WiFiUDP             ntpUDP;                 // UDP Link for NTP
 NTPClient           timeClient(ntpUDP, "pool.ntp.org", GMTp1_OFF);
 PubSubClient        mqtt_client(espClient);
 AquariumData        Aquarium    = {false, false, false, false, 25};
-AquariumControl     AquControl  = {false, false, false, false, false, false, false, false};
+AquariumControl     AquControl  = {false, false, false, false, false, false};
 long                l_startCtlTime  = 0;
 long                l_elapsCtlTime  = 0;
 
@@ -57,6 +58,39 @@ void WiFi_Setup() {
 
   randomSeed(micros());
 
+  ArduinoOTA.onStart([]() {
+    String type;
+    if (ArduinoOTA.getCommand() == U_FLASH) {
+      type = "sketch";
+    } else { // U_SPIFFS
+      type = "filesystem";
+    }
+
+    // NOTE: if updating SPIFFS this would be the place to unmount SPIFFS using SPIFFS.end()
+    Serial.println("Start updating " + type);
+  });
+  ArduinoOTA.onEnd([]() {
+    Serial.println("\nEnd");
+  });
+  ArduinoOTA.onProgress([](unsigned int progress, unsigned int total) {
+    Serial.printf("Progress: %u%%\r", (progress / (total / 100)));
+  });
+  ArduinoOTA.onError([](ota_error_t error) {
+    Serial.printf("Error[%u]: ", error);
+    if (error == OTA_AUTH_ERROR) {
+      Serial.println("Auth Failed");
+    } else if (error == OTA_BEGIN_ERROR) {
+      Serial.println("Begin Failed");
+    } else if (error == OTA_CONNECT_ERROR) {
+      Serial.println("Connect Failed");
+    } else if (error == OTA_RECEIVE_ERROR) {
+      Serial.println("Receive Failed");
+    } else if (error == OTA_END_ERROR) {
+      Serial.println("End Failed");
+    }
+  });
+  ArduinoOTA.begin();
+
   Serial.println("");
   Serial.println("WiFi connected");
   Serial.println("IP address: ");
@@ -79,17 +113,23 @@ void mqtt_callback(char* topic, byte* payload, unsigned int length) {
   Serial.println("-----------------------");
 
   if (strcmp(topic, MQTT_CTL_LAMP) == 0) {
-    
+    if (payload[1] == n_BYTE) { lampSet(true); }  // on
+    else                      { lampSet(false); } // off     
+  }
+  else if (strcmp(topic, MQTT_CTL_LAMP_AUTO) == 0) {
+    if (payload[1] == n_BYTE) { lampAutoSet(true); }  // on
+    else                      { lampAutoSet(false); } // off      
   }
   else if (strcmp(topic, MQTT_CTL_AERA) == 0) {
     
   }
   else if (strcmp(topic, MQTT_CTL_HEAT) == 0) {
-    
+    if (payload[1] == n_BYTE) { heaterSet(true); }  // on
+    else                      { heaterSet(false); } // off    
   }
   else if (strcmp(topic, MQTT_CTL_FILT) == 0) {
-    if (payload[1] == n_BYTE) { filterControl(true); }  // on
-    else                      { filterControl(false); } // off
+    if (payload[1] == n_BYTE) { filterSet(true); }  // on
+    else                      { filterSet(false); } // off
   }
   else {
     
@@ -116,7 +156,9 @@ void MQTT_Setup() {
     }
   }
   mqtt_client.subscribe(MQTT_CTL_LAMP);
+  mqtt_client.subscribe(MQTT_CTL_LAMP_AUTO);
   mqtt_client.subscribe(MQTT_CTL_AERA);
+  mqtt_client.subscribe(MQTT_CTL_AERA_AUTO);
   mqtt_client.subscribe(MQTT_CTL_HEAT);
   mqtt_client.subscribe(MQTT_CTL_FILT);
 }
@@ -165,10 +207,11 @@ void pubTemperature() {
   pubTimestamp();
 }
 
-// filterControl
+// filterSet
 // Set Filter on/off
-void filterControl(bool b_turn) {
+void filterSet(bool b_turn) {
   Aquarium.b_Filter   = b_turn;
+  AquControl.b_Filter = b_turn;
   if (b_turn) {
     Serial.println("Filter set to ON");
     digitalWrite(RELAY_FILT, LOW);
@@ -182,10 +225,11 @@ void filterControl(bool b_turn) {
   pubTimestamp();
 }
 
-// heaterControl
+// heaterSet
 // Set Heater on/off
-void heaterControl(bool b_turn) {
-  Aquarium.b_Heater   = b_turn;
+void heaterSet(bool b_turn) {
+  Aquarium.b_Heater    = b_turn;
+  AquControl.b_Heater  = b_turn;
   if (b_turn) {
     Serial.println("Heater set to ON");
     digitalWrite(RELAY_HEAT, LOW);
@@ -197,6 +241,39 @@ void heaterControl(bool b_turn) {
     mqtt_client.publish(MQTT_AQU_HEAT, "off");
   }
   pubTimestamp();
+}
+
+// lampSet
+// Set Lamp in automatic mode or manually on/off
+void lampSet(bool b_turn) {
+  AquControl.b_Lamp = b_turn;
+  if (AquControl.b_LampAuto == false) {
+    Aquarium.b_Lamp = b_turn;
+    if (b_turn) {
+      Serial.println("Lamp set to ON");
+      digitalWrite(RELAY_LAMP, LOW);
+      mqtt_client.publish(MQTT_AQU_LAMP, "on");
+    }
+    else {
+      Serial.println("Lamp set to OFF");
+      digitalWrite(RELAY_LAMP, HIGH);
+      mqtt_client.publish(MQTT_AQU_LAMP, "off");
+    }
+  }
+  pubTimestamp();
+}
+
+// lampAutoSet
+// Set Lamp automatic mode on/off
+void lampAutoSet(bool b_turn) {
+  AquControl.b_LampAuto = b_turn;
+  if (b_turn) {
+    Serial.println("Lamp Automatic control set to ON");
+  }
+  else {
+    Serial.println("Lamp Automatic control set to OFF");
+  }
+  pubTimestamp();  
 }
 
 /*  ARDUINO SETUP   */
@@ -217,6 +294,7 @@ void setup() {
 /*  ARDUINO LOOP   */
 void loop() {
   // put your main code here, to run repeatedly:
+  ArduinoOTA.handle();
   mqtt_client.loop();
 
   l_elapsCtlTime  = millis() - l_startCtlTime;
