@@ -1,3 +1,5 @@
 #.gitignore
 Aquacontrol.h
 Aquacontrol/Aquacontrol.ino.adafruit.bin
+me/Aquacontrol.FCStd1
+me/Aquacontrol_PCB.step

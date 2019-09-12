@@ -1,6 +1,9 @@
 #ifndef   _AQUACONTROL_
 #define   _AQUACONTROL_
 
+#define   AQU_DEBUG
+
+// Board related information
 #define   RELAY_LAMP    (4)
 #define   RELAY_AERA    (5)
 #define   RELAY_HEAT    (12)
@@ -8,15 +11,53 @@
 #define   SENS_THERM    (16)
 #define   SERIAL_SPEED  (115200)
 #define   GMTp1_OFF     (3600)
+#define   CTL_TIME      (60)
+
+// MQTT Topics
+#define   MQTT_CTL_LAMP       "aquarium/ctl/lamp"
+#define   MQTT_CTL_LAMP_AUTO  "aquarium/ctl/lampauto"
+#define   MQTT_CTL_AERA       "aquarium/ctl/aerator"
+#define   MQTT_CTL_AERA_AUTO  "aquarium/ctl/aeratorauto"
+#define   MQTT_CTL_HEAT       "aquarium/ctl/heat"
+#define   MQTT_CTL_FILT       "aquarium/ctl/filter"
+
+#define   MQTT_AQU_RST    "aquarium/reset"
+#define   MQTT_AQU_TIME   "aquarium/timestamp"
+#define   MQTT_AQU_LAMP   "aquarium/lamp"
+#define   MQTT_AQU_AERA   "aquarium/aerator"
+#define   MQTT_AQU_HEAT   "aquarium/heater"
+#define   MQTT_AQU_FILT   "aquarium/filter"
+#define   MQTT_AQU_TEMP   "aquarium/temperature"
+
+#define   n_BYTE          (110)   // "n" in byte format
 
 // WIFI to connect the ESP8266
-const char*     wifi_ssid   = "..........";
-const char*     wifi_pass   = "..........";
+const char*     wifi_ssid   = "..........";             // Set WiFI SSID
+const char*     wifi_pass   = "..........";             // Set WiFi Password
 
 // MQTT Server - CloudMQTT
-const char*     mqtt_server = "farmer.cloudmqtt.com";
-const uint16_t  mqtt_port   = 17344;
-const char*     mqtt_user   = "..........";
-const char*     mqtt_pass   = "..........";
+const char*     mqtt_server = "farmer.cloudmqtt.com";   // Set MQTT Broker Address
+const uint16_t  mqtt_port   = 17344;                    // Set MQTT Broker Port
+const char*     mqtt_user   = "..........";             // Set MQTT Broker User
+const char*     mqtt_pass   = "..........";             // Set MQTT Broker Password
+
+// Aquarium Current Status
+struct AquariumData {
+  bool  b_Lamp;
+  bool  b_Aerator;
+  bool  b_Heater;
+  bool  b_Filter;
+  float f_Temperature;
+};
+
+// Aquarium control commands
+struct AquariumControl {
+  bool b_Lamp;
+  bool b_LampAuto;
+  bool b_Aerator;
+  bool b_AeratorAuto;
+  bool b_Heater;
+  bool b_Filter;
+};
 
 #endif

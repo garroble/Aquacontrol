@@ -15,13 +15,14 @@ This project relies on Arduino IDE to work and ESP8266 boards installed from boa
 These are some of the most usefull examples I have found while developing Aquacontrol
 1. https://techtutorialsx.com/2017/04/09/esp8266-connecting-to-mqtt-broker/
 1. https://randomnerdtutorials.com/esp32-ntp-client-date-time-arduino-ide/
+1. http://www.martyncurrey.com/esp8266-and-the-arduino-ide-part-5-adding-wifimanager/
 
 ### Libraries
 The project is powered by the following libraries, thanks to all the contributors:
 - [OneWire](https://www.pjrc.com/teensy/td_libs_OneWire.html)
 - [DallasTemperature](https://github.com/milesburton/Arduino-Temperature-Control-Library)
 - [DS3231M](https://github.com/SV-Zanshin/DS3231M)
-- [ESP8266WiFi](https://arduino-esp8266.readthedocs.io/en/latest/)
-- [WiFiUdp](https://arduino-esp8266.readthedocs.io/en/latest/)
+- [ESP8266WiFi](https://arduino-esp8266.readthedocs.io/en/latest/) and other ESP8266 libraries.
+- [WiFiManager](https://github.com/kentaylor/WiFiManager)
 - [NTPClient](https://github.com/taranais/NTPClient)
 - [PubSubClient](https://pubsubclient.knolleary.net/)
