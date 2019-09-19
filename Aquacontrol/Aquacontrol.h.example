@@ -3,17 +3,32 @@
 
 #define   AQU_DEBUG
 
-// Board related information
+#define   VERSION       ("0.0.1")
+
 #define   RELAY_LAMP    (4)
 #define   RELAY_AERA    (5)
 #define   RELAY_HEAT    (12)
 #define   RELAY_FILT    (13)
 #define   SENS_THERM    (16)
+#define   I2C_SDA       (2)
+#define   I2C_SCL       (14)
 #define   SERIAL_SPEED  (115200)
 #define   GMTp1_OFF     (3600)
 #define   CTL_TIME      (60)
 
-// MQTT Topics
+#define   LAMP_ON       (HIGH)
+#define   LAMP_OFF      (LOW)
+#define   AERA_ON       (LOW)
+#define   AERA_OFF      (HIGH)
+#define   HEAT_ON       (LOW)
+#define   HEAT_OFF      (HIGH)
+#define   FILT_ON       (LOW)
+#define   FILT_OFF      (HIGH)
+
+#define   WIFI_CONF_TIMEOUT (60)
+#define   WIFI_CONF_AP_SSID ("---------")
+#define   WIFI_CONF_AP_PASS ("---------")
+
 #define   MQTT_CTL_LAMP       "aquarium/ctl/lamp"
 #define   MQTT_CTL_LAMP_AUTO  "aquarium/ctl/lampauto"
 #define   MQTT_CTL_AERA       "aquarium/ctl/aerator"
@@ -21,6 +36,7 @@
 #define   MQTT_CTL_HEAT       "aquarium/ctl/heat"
 #define   MQTT_CTL_FILT       "aquarium/ctl/filter"
 
+#define   MQTT_AQU_VERS   "aquarium/version"
 #define   MQTT_AQU_RST    "aquarium/reset"
 #define   MQTT_AQU_TIME   "aquarium/timestamp"
 #define   MQTT_AQU_LAMP   "aquarium/lamp"
@@ -32,22 +48,23 @@
 #define   n_BYTE          (110)   // "n" in byte format
 
 // WIFI to connect the ESP8266
-const char*     wifi_ssid   = "..........";             // Set WiFI SSID
-const char*     wifi_pass   = "..........";             // Set WiFi Password
+const char*     wifi_ssid   = "---------";
+const char*     wifi_pass   = "---------";
 
 // MQTT Server - CloudMQTT
-const char*     mqtt_server = "farmer.cloudmqtt.com";   // Set MQTT Broker Address
-const uint16_t  mqtt_port   = 17344;                    // Set MQTT Broker Port
-const char*     mqtt_user   = "..........";             // Set MQTT Broker User
-const char*     mqtt_pass   = "..........";             // Set MQTT Broker Password
+const char*     mqtt_server = "farmer.cloudmqtt.com";
+const uint16_t  mqtt_port   = 17344;
+const char*     mqtt_user   = "---------";
+const char*     mqtt_pass   = "---------";
 
 // Aquarium Current Status
 struct AquariumData {
-  bool  b_Lamp;
-  bool  b_Aerator;
-  bool  b_Heater;
-  bool  b_Filter;
-  float f_Temperature;
+  bool    b_Lamp;
+  bool    b_Aerator;
+  bool    b_Heater;
+  bool    b_Filter;
+  float   f_Temperature;
+  bool    b_RTCavailable;
 };
 
 // Aquarium control commands

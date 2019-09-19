@@ -36,10 +36,11 @@ void Aquarium_Default() {
   digitalWrite(RELAY_AERA, AERA_ON);
   digitalWrite(RELAY_HEAT, HEAT_ON);
   digitalWrite(RELAY_FILT, FILT_ON);
-  Aquarium.b_Lamp     = false;
-  Aquarium.b_Aerator  = true;
-  Aquarium.b_Heater   = true;
-  Aquarium.b_Filter   = true;
+  Aquarium.b_Lamp         = false;
+  Aquarium.b_Aerator      = true;
+  Aquarium.b_Heater       = true;
+  Aquarium.b_Filter       = true;
+  Aquarium.b_RTCavailable = false;
   TempSensor.requestTemperatures();
   Aquarium.f_Temperature = TempSensor.getTempCByIndex(0);
 }
@@ -211,6 +212,21 @@ void MQTT_Setup() {
   mqtt_client.subscribe(MQTT_CTL_FILT);
 }
 
+// RTC_Setup
+// Initiates RTC clock
+void RTC_Setup() {
+  char inputBuffer[32];
+  if (RTClock.begin(I2C_SDA, I2C_SCL)) {
+    Serial.println();
+    Serial.print("RTC Initialized!: ");
+    DateTime now = RTClock.now();
+    sprintf(inputBuffer,"%04d-%02d-%02d %02d:%02d:%02d", now.year(),
+              now.month(), now.day(), now.hour(), now.minute(), now.second());
+    Serial.println(inputBuffer);
+    Aquarium.b_RTCavailable = true;
+  }
+}
+
 // setResetData
 // Sets the initialization status of the Aquarium to a safe configuration
 void setResetData() {
@@ -373,7 +389,7 @@ void setup() {
   Serial.println();
   TempSensor.begin();
   Aquarium_Default();
-  RTClock.begin();
+  RTC_Setup();
   if(WiFiConfig_Setup() != WL_CONNECTED) {
     WiFi_Setup();
   }
