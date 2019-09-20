@@ -21,6 +21,7 @@ NTPClient           timeClient(ntpUDP, "pool.ntp.org", GMTp1_OFF);
 PubSubClient        mqtt_client(espClient);
 AquariumData        Aquarium    = {false, false, false, false, 25};
 AquariumControl     AquControl  = {false, false, false, false, false, false};
+wl_status_t         wifi_status = WL_DISCONNECTED;
 long                l_startCtlTime  = 0;
 long                l_elapsCtlTime  = 0;
 
@@ -65,8 +66,8 @@ wl_status_t WiFiConfig_Setup() {
   wifi_status = WiFi.status();
   if (wifi_status == WL_CONNECTED) {
     Serial.println("");
-    Serial.println("WiFi connected");
-    Serial.println("IP address: ");
+    Serial.println(F("WiFi connected"));
+    Serial.println(F("IP address: "));
     Serial.println(WiFi.localIP());
   }
   wifiManager.~WiFiManager();
@@ -75,7 +76,9 @@ wl_status_t WiFiConfig_Setup() {
 
 // WiFi_Setup
 // Initiates WiFi Connectivity to predefined SSID
-void WiFi_Setup() {
+wl_status_t WiFi_Setup() {
+  int           i_Cont = 0;
+  wl_status_t   wl_Status = WL_DISCONNECTED;
   delay(10);
   Serial.println();
   Serial.println(F("INITIALIZING WIFI..................."));
@@ -84,17 +87,26 @@ void WiFi_Setup() {
 
   WiFi.begin(wifi_ssid, wifi_pass);
 
-  while (WiFi.status() != WL_CONNECTED) {
+  while ((WiFi.status() != WL_CONNECTED) && (i_Cont < WIFI_CONN_TIMEOUT)) {
     delay(500);
     Serial.print(".");
+    i_Cont++;
   }
+
+  wl_Status = WiFi.status();
 
   randomSeed(micros());
 
   Serial.println("");
-  Serial.println("WiFi connected");
-  Serial.println("IP address: ");
-  Serial.println(WiFi.localIP());
+  if (wl_Status == WL_CONNECTED) {
+    Serial.println(F("WiFi connected"));
+    Serial.print(F("IP address: "));
+    Serial.println(WiFi.localIP());
+  }
+  else {
+    Serial.println(F("WiFi NOT connected"));
+  }
+  return wl_Status;
 }
 
 // OTA_Setup
@@ -272,6 +284,8 @@ void pubTemperature() {
   tempString = Aquarium.f_Temperature;
   mqtt_client.publish(MQTT_AQU_TEMP, tempString.c_str());
   pubTimestamp();
+  Serial.print("----> Aquarium Temperature: ");
+  Serial.println(Aquarium.f_Temperature);
 }
 
 // filterSet
@@ -378,7 +392,6 @@ void aeraAutoSet(bool b_turn) {
 
 /*  ARDUINO SETUP   */
 void setup() {
-  wl_status_t wifi_status = WL_DISCONNECTED;
   // put your setup code here, to run once:
   Serial.begin(SERIAL_SPEED);
   Serial.println();
@@ -390,12 +403,15 @@ void setup() {
   TempSensor.begin();
   Aquarium_Default();
   RTC_Setup();
-  if(WiFiConfig_Setup() != WL_CONNECTED) {
-    WiFi_Setup();
+  wifi_status = WiFiConfig_Setup();
+  if(wifi_status != WL_CONNECTED) {
+    wifi_status = WiFi_Setup();
   }
   OTA_Setup();
-  timeClient.begin();
-  MQTT_Setup();
+  if(wifi_status == WL_CONNECTED) {
+    timeClient.begin();
+    MQTT_Setup();
+  }
   setResetData();
 
   l_startCtlTime = millis();
@@ -411,6 +427,15 @@ void loop() {
   if (l_elapsCtlTime > (CTL_TIME*1000)) {
     Serial.println(F(" ---> Control loop <--- "));
     pubTemperature();
+    wifi_status = WiFi.status();
+    if(wifi_status != WL_CONNECTED) {
+      Serial.println("---> WiFi Disconnected");
+      wifi_status = WiFi_Setup();
+    }
+    if(wifi_status == WL_CONNECTED) {
+      timeClient.begin();
+      MQTT_Setup();
+    }
     l_startCtlTime = millis();
   }
 }
