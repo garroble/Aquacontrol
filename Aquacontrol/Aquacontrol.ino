@@ -227,10 +227,18 @@ void MQTT_Setup() {
 // RTC_Setup
 // Initiates RTC clock
 void RTC_Setup() {
-  char inputBuffer[32];
+  char      inputBuffer[32];
+  String    timeString;
   if (RTClock.begin(I2C_SDA, I2C_SCL)) {
     Serial.println();
     Serial.print("RTC Initialized!: ");
+    if (wifi_status == WL_CONNECTED) {
+      // Set RTC Time based on NTP server
+      timeClient.update();
+      timeString = timeClient.getFormattedDate();
+      DateTime  RTCtime(timeClient.getEpochTime());
+      RTClock.adjust(RTCtime);
+    }
     DateTime now = RTClock.now();
     sprintf(inputBuffer,"%04d-%02d-%02d %02d:%02d:%02d", now.year(),
               now.month(), now.day(), now.hour(), now.minute(), now.second());
@@ -270,9 +278,18 @@ void setResetData() {
 // pubTimestamp
 // Publish Aquarium Timestamp for last message
 void pubTimestamp() {
-  String  timeString;  
-  timeClient.update();
-  timeString = timeClient.getFormattedDate();
+  String  timeString;
+  char    timeBuf[20];
+  if (wifi_status == WL_CONNECTED) {  
+    timeClient.update();
+    timeString = timeClient.getFormattedDate();
+  }
+  else {
+    DateTime now = RTClock.now();
+    sprintf(timeBuf, "%02d-%02d-%02dT%02d:%02d:%02d", now.year(), now.month(), now.day(),
+      now.hour(), now.minute(), now.second());
+    timeString = timeBuf;
+  }
   mqtt_client.publish(MQTT_AQU_TIME, timeString.c_str());
 }
 
@@ -402,7 +419,6 @@ void setup() {
   Serial.println();
   TempSensor.begin();
   Aquarium_Default();
-  RTC_Setup();
   wifi_status = WiFiConfig_Setup();
   if(wifi_status != WL_CONNECTED) {
     wifi_status = WiFi_Setup();
@@ -412,6 +428,7 @@ void setup() {
     timeClient.begin();
     MQTT_Setup();
   }
+  RTC_Setup();
   setResetData();
 
   l_startCtlTime = millis();
@@ -431,9 +448,12 @@ void loop() {
     if(wifi_status != WL_CONNECTED) {
       Serial.println("---> WiFi Disconnected");
       wifi_status = WiFi_Setup();
+      if(wifi_status == WL_CONNECTED) {
+        timeClient.begin();
+        MQTT_Setup();
+      }
     }
-    if(wifi_status == WL_CONNECTED) {
-      timeClient.begin();
+    if (mqtt_client.state() != 0) {
       MQTT_Setup();
     }
     l_startCtlTime = millis();
