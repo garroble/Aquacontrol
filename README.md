@@ -1,5 +1,5 @@
 # AQUACONTROL
-Aquacontrol is a Springwater Aquarium controller to make it easy the interaction with the most common technical equipment used in aquariums.
+Aquacontrol is a freshwater Aquarium controller to make it easy the interaction with the most common technical equipment used in aquariums.
 
 You can find:
 1. PCB Board project on [Circuit Maker](https://workspace.circuitmaker.com/Projects/Details/Pablo-Garcia/Aquacontrol)
