@@ -3,7 +3,7 @@
 
 #define   AQU_DEBUG
 
-#define   VERSION       ("0.0.1")
+#define   VERSION       ("0.0.2")
 
 #define   RELAY_LAMP    (4)
 #define   RELAY_AERA    (5)
@@ -14,7 +14,7 @@
 #define   I2C_SCL       (14)
 #define   SERIAL_SPEED  (115200)
 #define   GMTp1_OFF     (3600)
-#define   CTL_TIME      (60)
+#define   CTL_TIME      (30)
 
 #define   LAMP_ON       (HIGH)
 #define   LAMP_OFF      (LOW)
@@ -26,55 +26,82 @@
 #define   FILT_OFF      (HIGH)
 
 #define   WIFI_CONF_TIMEOUT (60)
-#define   WIFI_CONF_AP_SSID ("---------")
-#define   WIFI_CONF_AP_PASS ("---------")
+#define   WIFI_CONN_TIMEOUT (20)
+#define   WIFI_CONF_AP_SSID ("Aquacontrol")
+#define   WIFI_CONF_AP_PASS ("ancistrus")
 
-#define   MQTT_CTL_LAMP       "aquarium/ctl/lamp"
-#define   MQTT_CTL_LAMP_AUTO  "aquarium/ctl/lampauto"
-#define   MQTT_CTL_AERA       "aquarium/ctl/aerator"
-#define   MQTT_CTL_AERA_AUTO  "aquarium/ctl/aeratorauto"
-#define   MQTT_CTL_HEAT       "aquarium/ctl/heat"
-#define   MQTT_CTL_FILT       "aquarium/ctl/filter"
+// All topics are retained
+#define   MQTT_AQU_VERS       "aquarium/version"
+#define   MQTT_AQU_RST        "aquarium/reset"
+#define   MQTT_AQU_IP         "aquarium/ip"
+#define   MQTT_AQU_TIME       "aquarium/timestamp"
+#define   MQTT_AQU_LAMP_STA   "aquarium/lamp/status"
+#define   MQTT_AQU_AERA_STA   "aquarium/aerator/status"
+#define   MQTT_AQU_HEAT_STA   "aquarium/heater/status"
+#define   MQTT_AQU_FILT_STA   "aquarium/filter/status"
+#define   MQTT_AQU_TEMP       "aquarium/temperature"
 
-#define   MQTT_AQU_VERS   "aquarium/version"
-#define   MQTT_AQU_RST    "aquarium/reset"
-#define   MQTT_AQU_TIME   "aquarium/timestamp"
-#define   MQTT_AQU_LAMP   "aquarium/lamp"
-#define   MQTT_AQU_AERA   "aquarium/aerator"
-#define   MQTT_AQU_HEAT   "aquarium/heater"
-#define   MQTT_AQU_FILT   "aquarium/filter"
-#define   MQTT_AQU_TEMP   "aquarium/temperature"
+#define   MQTT_LAMP_CTL       "aquarium/lamp/control"
+#define   MQTT_LAMP_CTL_AUTO  "aquarium/lamp/automode"
+#define   MQTT_LAMP_CTL_A0ACT "aquarium/lamp/prog0active"
+#define   MQTT_LAMP_CTL_A0ON  "aquarium/lamp/prog0on"
+#define   MQTT_LAMP_CTL_A0OFF "aquarium/lamp/prog0off"
+#define   MQTT_LAMP_CTL_A1ACT "aquarium/lamp/prog1active"
+#define   MQTT_LAMP_CTL_A1ON  "aquarium/lamp/prog1on"
+#define   MQTT_LAMP_CTL_A1OFF "aquarium/lamp/prog1off"
+#define   MQTT_LAMP_CTL_A2ACT "aquarium/lamp/prog2active"
+#define   MQTT_LAMP_CTL_A2ON  "aquarium/lamp/prog2on"
+#define   MQTT_LAMP_CTL_A2OFF "aquarium/lamp/prog2off"
+
+#define   MQTT_AERA_CTL       "aquarium/aerator/control"
+#define   MQTT_AERA_CTL_AUTO  "aquarium/aerator/automode"
+#define   MQTT_AERA_CTL_A0ACT "aquarium/aerator/prog0active"
+#define   MQTT_AERA_CTL_A0ON  "aquarium/aerator/prog0on"
+#define   MQTT_AERA_CTL_A0OFF "aquarium/aerator/prog0off"
+#define   MQTT_AERA_CTL_A1ACT "aquarium/aerator/prog1active"
+#define   MQTT_AERA_CTL_A1ON  "aquarium/aerator/prog1on"
+#define   MQTT_AERA_CTL_A1OFF "aquarium/aerator/prog1off"
+#define   MQTT_AERA_CTL_A2ACT "aquarium/aerator/prog2active"
+#define   MQTT_AERA_CTL_A2ON  "aquarium/aerator/prog2on"
+#define   MQTT_AERA_CTL_A2OFF "aquarium/aerator/prog2off"
+
+#define   MQTT_HEAT_CTL       "aquarium/heater/control"
+
+#define   MQTT_FILT_CTL       "aquarium/filter/control"
 
 #define   n_BYTE          (110)   // "n" in byte format
+#define   MAX_AUTO_PROG   (3)
 
 // WIFI to connect the ESP8266
-const char*     wifi_ssid   = "---------";
-const char*     wifi_pass   = "---------";
+const char*     wifi_ssid   = "----------";
+const char*     wifi_pass   = "----------";
 
 // MQTT Server - CloudMQTT
 const char*     mqtt_server = "farmer.cloudmqtt.com";
 const uint16_t  mqtt_port   = 17344;
-const char*     mqtt_user   = "---------";
-const char*     mqtt_pass   = "---------";
+const char*     mqtt_user   = "----------";
+const char*     mqtt_pass   = "----------";
 
-// Aquarium Current Status
-struct AquariumData {
-  bool    b_Lamp;
-  bool    b_Aerator;
-  bool    b_Heater;
-  bool    b_Filter;
-  float   f_Temperature;
-  bool    b_RTCavailable;
+struct AquaAutoOnOff {
+  bool  b_Active;
+  int   i_ONtime;
+  int   i_OFFtime;
 };
 
-// Aquarium control commands
-struct AquariumControl {
-  bool b_Lamp;
-  bool b_LampAuto;
-  bool b_Aerator;
-  bool b_AeratorAuto;
-  bool b_Heater;
-  bool b_Filter;
+struct AquariumTech {
+  bool          b_Status;
+  bool          b_AutoMode;
+  bool          b_Control;
+  AquaAutoOnOff Program[MAX_AUTO_PROG];
+};
+
+struct AquariumData {
+  AquariumTech    Lamp;
+  AquariumTech    Aerator;
+  AquariumTech    Heater;
+  AquariumTech    Filter;
+  float           f_Temperature;
+  bool            b_RTCavailable;
 };
 
 #endif
