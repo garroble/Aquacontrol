@@ -169,8 +169,8 @@ void mqtt_callback(char* topic, byte* payload, unsigned int length) {
   Serial.println(F("-----------------------"));
 
   if (strcmp(topic, MQTT_CTL_LAMP) == 0) {
-    if (payload[1] == n_BYTE) { lampSet(true); }  // on
-    else                      { lampSet(false); } // off     
+    if (payload[1] == n_BYTE) { lampSetManual(true); }  // on
+    else                      { lampSetManual(false); } // off     
   }
   else if (strcmp(topic, MQTT_CTL_LAMP_AUTO) == 0) {
     if (payload[1] == n_BYTE) { lampAutoSet(true); }  // on
@@ -191,6 +191,27 @@ void mqtt_callback(char* topic, byte* payload, unsigned int length) {
   else if (strcmp(topic, MQTT_CTL_FILT) == 0) {
     if (payload[1] == n_BYTE) { filterSet(true); }  // on
     else                      { filterSet(false); } // off
+  }
+  else if (strcmp(topic, MQTT_CTL_LAMP_A0ACT) == 0) {
+    //lampAutoSetTime(0,LAMP_ON,payload);
+  }   
+  else if (strcmp(topic, MQTT_CTL_LAMP_A0ON) == 0) {
+    lampAutoSetTime(0,LAMP_ON,payload);
+  } 
+  else if (strcmp(topic, MQTT_CTL_LAMP_A0OFF) == 0) {
+    lampAutoSetTime(0,LAMP_OFF,payload);
+  }
+  else if (strcmp(topic, MQTT_CTL_LAMP_A1ON) == 0) {
+    lampAutoSetTime(1,LAMP_ON,payload);
+  } 
+  else if (strcmp(topic, MQTT_CTL_LAMP_A1OFF) == 0) {
+    lampAutoSetTime(1,LAMP_OFF,payload);
+  }
+  else if (strcmp(topic, MQTT_CTL_LAMP_A2ON) == 0) {
+    lampAutoSetTime(2,LAMP_ON,payload);
+  } 
+  else if (strcmp(topic, MQTT_CTL_LAMP_A2OFF) == 0) {
+    lampAutoSetTime(2,LAMP_OFF,payload);
   }
   else {
     Serial.println("Unknonw message");
@@ -216,12 +237,22 @@ void MQTT_Setup() {
       delay(2000);
     }
   }
+  mqtt_client.publish(MQTT_AQU_IP,WiFi.localIP().toString().c_str(),true);
   mqtt_client.subscribe(MQTT_CTL_LAMP);
   mqtt_client.subscribe(MQTT_CTL_LAMP_AUTO);
   mqtt_client.subscribe(MQTT_CTL_AERA);
   mqtt_client.subscribe(MQTT_CTL_AERA_AUTO);
   mqtt_client.subscribe(MQTT_CTL_HEAT);
   mqtt_client.subscribe(MQTT_CTL_FILT);
+  mqtt_client.subscribe(MQTT_CTL_LAMP_A0ACT);
+  mqtt_client.subscribe(MQTT_CTL_LAMP_A0ON);
+  mqtt_client.subscribe(MQTT_CTL_LAMP_A0OFF);
+  mqtt_client.subscribe(MQTT_CTL_LAMP_A1ACT);
+  mqtt_client.subscribe(MQTT_CTL_LAMP_A1ON);
+  mqtt_client.subscribe(MQTT_CTL_LAMP_A1OFF);
+  mqtt_client.subscribe(MQTT_CTL_LAMP_A2ACT);
+  mqtt_client.subscribe(MQTT_CTL_LAMP_A2ON);
+  mqtt_client.subscribe(MQTT_CTL_LAMP_A2OFF);
 }
 
 // RTC_Setup
@@ -262,17 +293,17 @@ void setResetData() {
   Serial.print(" | TIME (GMT+1): ");
   Serial.println(timeString.substring(i_datetime+1, timeString.length()-1));
   mqtt_client.publish(MQTT_AQU_RST, timeString.c_str());
-  if (Aquarium.b_Lamp) { mqtt_client.publish(MQTT_AQU_LAMP, "on"); }
-  else                 { mqtt_client.publish(MQTT_AQU_LAMP, "off"); }
-  if (Aquarium.b_Aerator) { mqtt_client.publish(MQTT_AQU_AERA, "on"); }
-  else                    { mqtt_client.publish(MQTT_AQU_AERA, "off"); }
-  if (Aquarium.b_Heater) { mqtt_client.publish(MQTT_AQU_HEAT, "on"); }
-  else                   { mqtt_client.publish(MQTT_AQU_HEAT, "off"); }
-  if (Aquarium.b_Filter) { mqtt_client.publish(MQTT_AQU_FILT, "on"); }
-  else                   { mqtt_client.publish(MQTT_AQU_FILT, "off"); }
+  if (Aquarium.b_Lamp) { mqtt_client.publish(MQTT_AQU_LAMP, "on", true); }
+  else                 { mqtt_client.publish(MQTT_AQU_LAMP, "off", true); }
+  if (Aquarium.b_Aerator) { mqtt_client.publish(MQTT_AQU_AERA, "on", true); }
+  else                    { mqtt_client.publish(MQTT_AQU_AERA, "off", true); }
+  if (Aquarium.b_Heater) { mqtt_client.publish(MQTT_AQU_HEAT, "on", true); }
+  else                   { mqtt_client.publish(MQTT_AQU_HEAT, "off", true); }
+  if (Aquarium.b_Filter) { mqtt_client.publish(MQTT_AQU_FILT, "on", true); }
+  else                   { mqtt_client.publish(MQTT_AQU_FILT, "off", true); }
   tempString = Aquarium.f_Temperature;
-  mqtt_client.publish(MQTT_AQU_TEMP, tempString.c_str());
-  mqtt_client.publish(MQTT_AQU_VERS, VERSION);
+  mqtt_client.publish(MQTT_AQU_TEMP, tempString.c_str(), true);
+  mqtt_client.publish(MQTT_AQU_VERS, VERSION, true);
 }
 
 // pubTimestamp
@@ -290,7 +321,7 @@ void pubTimestamp() {
       now.hour(), now.minute(), now.second());
     timeString = timeBuf;
   }
-  mqtt_client.publish(MQTT_AQU_TIME, timeString.c_str());
+  mqtt_client.publish(MQTT_AQU_TIME, timeString.c_str(), true);
 }
 
 // pubTemperature
@@ -299,7 +330,7 @@ void pubTemperature() {
   String  tempString;
   Aquarium.f_Temperature = TempSensor.getTempCByIndex(0);
   tempString = Aquarium.f_Temperature;
-  mqtt_client.publish(MQTT_AQU_TEMP, tempString.c_str());
+  mqtt_client.publish(MQTT_AQU_TEMP, tempString.c_str(), true);
   pubTimestamp();
   Serial.print("----> Aquarium Temperature: ");
   Serial.println(Aquarium.f_Temperature);
@@ -313,12 +344,12 @@ void filterSet(bool b_turn) {
   if (b_turn) {
     Serial.println(F("Filter set to ON"));
     digitalWrite(RELAY_FILT, FILT_ON);
-    mqtt_client.publish(MQTT_AQU_FILT, "on");
+    mqtt_client.publish(MQTT_AQU_FILT, "on", true);
   }
   else {
     Serial.println(F("Filter set to OFF"));
     digitalWrite(RELAY_FILT, FILT_OFF);
-    mqtt_client.publish(MQTT_AQU_FILT, "off");
+    mqtt_client.publish(MQTT_AQU_FILT, "off", true);
   }
   pubTimestamp();
 }
@@ -331,34 +362,42 @@ void heaterSet(bool b_turn) {
   if (b_turn) {
     Serial.println(F("Heater set to ON"));
     digitalWrite(RELAY_HEAT, HEAT_ON);
-    mqtt_client.publish(MQTT_AQU_HEAT, "on");
+    mqtt_client.publish(MQTT_AQU_HEAT, "on", true);
   }
   else {
     Serial.println(F("Heater set to OFF"));
     digitalWrite(RELAY_HEAT, HEAT_OFF);
-    mqtt_client.publish(MQTT_AQU_HEAT, "off");
+    mqtt_client.publish(MQTT_AQU_HEAT, "off", true);
   }
   pubTimestamp();
 }
 
 // lampSet
-// Set Lamp manually on/off
+// Set Lamp on/off
 void lampSet(bool b_turn) {
-  AquControl.b_Lamp  = b_turn;
-  if (AquControl.b_LampAuto == false) {
+  if (Aquarium.b_Lamp != b_turn) {
     Aquarium.b_Lamp = b_turn;
     if (b_turn) {
       Serial.println(F("Lamp set to ON"));
       digitalWrite(RELAY_LAMP, LAMP_ON);
-      mqtt_client.publish(MQTT_AQU_LAMP, "on");
+      mqtt_client.publish(MQTT_AQU_LAMP, "on", true);
     }
     else {
       Serial.println(F("Lamp set to OFF"));
       digitalWrite(RELAY_LAMP, LAMP_OFF);
-      mqtt_client.publish(MQTT_AQU_LAMP, "off");
+      mqtt_client.publish(MQTT_AQU_LAMP, "off", true);
     }
   }
-  pubTimestamp();
+}
+
+// lampSetManual
+// Set Lamp manually on/off
+void lampSetManual(bool b_turn) {
+  AquControl.b_Lamp  = b_turn;
+  if (AquControl.b_LampAuto == false) {
+    lampSet(b_turn);
+  }
+  pubTimestamp();  
 }
 
 // lampAutoSet
@@ -374,6 +413,63 @@ void lampAutoSet(bool b_turn) {
   pubTimestamp();  
 }
 
+// lampAutoSetTime
+// Get Lamp Auto programs ON and OFF time
+void lampAutoSetTime(byte b_Order, bool b_OnOff, byte* message) {
+  // Expect 09:25 or 21:25
+  int i_hour = 0;
+  int i_minute = 0;
+  char  c_time[5];
+  i_hour    = ((int)message[0] - '0')*10 + ((int)message[1] - '0');
+  i_minute  = ((int)message[3] - '0')*10 + ((int)message[4] - '0');
+  Serial.print("Set Auto Lamp ");
+  Serial.print(b_Order);
+  Serial.print(" program to ");
+  if (b_OnOff) {
+    Serial.print("turn ON the ligths at ");
+    AquControl.lampHours[b_Order].i_ONtime = i_hour * 60 + i_minute;
+  }
+  else {
+    Serial.print("turn OFF the ligths at ");
+    AquControl.lampHours[b_Order].i_OFFtime = i_hour * 60 + i_minute;
+  }
+  AquControl.lampHours[b_Order].b_Active = true;
+  sprintf(c_time, "%02d:%02d", i_hour, i_minute);
+  Serial.println(c_time);
+}
+
+// loopLampCtl
+// When set to auto, control the lamps based on ON/OFF hours.
+void loopLampCtl() {
+  int       i_Now = 0;
+  bool      b_TurnLamp = false;
+  
+  if (AquControl.b_LampAuto == true) {
+    if (wifi_status == WL_CONNECTED) {  
+      timeClient.update();
+      i_Now = timeClient.getHours()*60 + timeClient.getMinutes();
+    }
+    else {
+      DateTime now = RTClock.now();
+      i_Now = now.hour() * 60 + now.minute();
+    }
+    for (int i_Cont = 0; i_Cont < MAX_AUTO_PROG; i_Cont++) {
+      if (AquControl.lampHours[i_Cont].i_OFFtime > AquControl.lampHours[i_Cont].i_ONtime) {
+        if( (i_Now >= AquControl.lampHours[i_Cont].i_ONtime) &&
+            (i_Now <  AquControl.lampHours[i_Cont].i_OFFtime) ) {
+          lampSet(true);
+        }
+      }
+      else {
+        if( (i_Now >= AquControl.lampHours[i_Cont].i_ONtime) ||
+            (i_Now <  AquControl.lampHours[i_Cont].i_OFFtime) ) {
+          lampSet(false);
+        }        
+      }
+    }
+  }
+}
+
 // aeraSet
 // Set Aerator manually on/off
 void aeraSet(bool b_turn) {
@@ -383,12 +479,12 @@ void aeraSet(bool b_turn) {
     if (b_turn) {
       Serial.println(F("Aerator set to ON"));
       digitalWrite(RELAY_AERA, AERA_ON);
-      mqtt_client.publish(MQTT_AQU_AERA, "on");
+      mqtt_client.publish(MQTT_AQU_AERA, "on", true);
     }
     else {
       Serial.println(F("Aerator set to OFF"));
       digitalWrite(RELAY_AERA, AERA_OFF);
-      mqtt_client.publish(MQTT_AQU_AERA, "off");
+      mqtt_client.publish(MQTT_AQU_AERA, "off", true);
     }
   }
   pubTimestamp();
@@ -443,7 +539,7 @@ void loop() {
   l_elapsCtlTime  = millis() - l_startCtlTime;
   if (l_elapsCtlTime > (CTL_TIME*1000)) {
     Serial.println(F(" ---> Control loop <--- "));
-    pubTemperature();
+    // Run some vefications
     wifi_status = WiFi.status();
     if(wifi_status != WL_CONNECTED) {
       Serial.println("---> WiFi Disconnected");
@@ -456,6 +552,10 @@ void loop() {
     if (mqtt_client.state() != 0) {
       MQTT_Setup();
     }
+
+    // Control Aquarium
+    pubTemperature();
+    loopLampCtl();
     l_startCtlTime = millis();
   }
 }
