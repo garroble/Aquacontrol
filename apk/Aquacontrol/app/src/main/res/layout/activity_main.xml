@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorBackground"
+    tools:context=".MainActivity">
+
+    <LinearLayout
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:focusable="true"
+        android:focusableInTouchMode="true">
+
+        <requestFocus />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearTemp"
+        android:layout_width="392dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/rounded_corners"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:layout_width="192dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="64dp"
+            android:gravity="center_vertical"
+            android:text="Temperature (ºC):"
+            android:textColor="@color/colorMainText"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/temperature"
+            android:layout_width="128dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="8dp"
+            android:gravity="center_vertical"
+            android:textColor="@color/colorMainText"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearFilter"
+        android:layout_width="392dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/rounded_corners"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearTemp">
+
+        <TextView
+            android:layout_width="192dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="64dp"
+            android:gravity="center_vertical"
+            android:text="Filter:"
+            android:textColor="@color/colorMainText"
+            android:textStyle="bold" />
+
+        <Switch
+            android:id="@+id/filterSW"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearHeater"
+        android:layout_width="392dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/rounded_corners"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearFilter">
+
+        <TextView
+            android:layout_width="192dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="64dp"
+            android:gravity="center_vertical"
+            android:text="Heater:"
+            android:textColor="@color/colorMainText"
+            android:textStyle="bold" />
+
+        <Switch
+            android:id="@+id/heaterSW"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLamp"
+        android:layout_width="392dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/rounded_corners"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearHeater">
+
+        <TextView
+            android:layout_width="192dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="64dp"
+            android:gravity="center_vertical"
+            android:text="Lamp:"
+            android:textColor="@color/colorMainText"
+            android:textStyle="bold" />
+
+        <Switch
+            android:id="@+id/lampSW"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <TableLayout
+        android:id="@+id/tableLamp"
+        android:layout_width="392dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:gravity="center_vertical"
+        android:background="@drawable/rounded_corners"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLamp">
+        <TableRow>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_marginLeft="64dp"
+                android:gravity="center_vertical"
+                android:text="Lamp:"
+                android:textColor="@color/colorMainText"
+                android:textStyle="bold" />
+
+            <Switch
+                android:id="@+id/lampSW"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="40dp" />
+        </TableRow>
+        <TableRow>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_marginLeft="64dp"
+                android:gravity="center_vertical"
+                android:text="Lamp Automatic:"
+                android:textColor="@color/colorMainText"
+                android:textStyle="bold" />
+
+            <Switch
+                android:id="@+id/lampAutoSW"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </TableRow>
+        <TableRow>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_marginLeft="64dp"
+                android:gravity="center_vertical"
+                android:text="Program 1:"
+                android:textColor="@color/colorMainText"
+                android:textStyle="bold" />
+
+            <Switch
+                android:id="@+id/lampProg1SW"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <EditText
+                android:id="@+id/lampPR1OnTime"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="24dp"
+                android:focusableInTouchMode="false"
+                android:textColor="@color/colorSecText"
+                android:hint="On" />
+            <EditText
+                android:id="@+id/lampPR1OffTime"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="24dp"
+                android:focusableInTouchMode="false"
+                android:textColor="@color/colorSecText"
+                android:hint="Off" />
+        </TableRow>
+        <TableRow>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_marginLeft="64dp"
+                android:gravity="center_vertical"
+                android:text="Program 2:"
+                android:textColor="@color/colorMainText"
+                android:textStyle="bold" />
+
+            <Switch
+                android:id="@+id/lampProg2SW"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <EditText
+                android:id="@+id/lampPR2OnTime"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="24dp"
+                android:focusableInTouchMode="false"
+                android:textColor="@color/colorSecText"
+                android:hint="On" />
+            <EditText
+                android:id="@+id/lampPR2OffTime"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="24dp"
+                android:focusableInTouchMode="false"
+                android:textColor="@color/colorSecText"
+                android:hint="Off" />
+        </TableRow>
+        <TableRow>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_marginLeft="64dp"
+                android:gravity="center_vertical"
+                android:text="Program 3:"
+                android:textColor="@color/colorMainText"
+                android:textStyle="bold" />
+
+            <Switch
+                android:id="@+id/lampProg3SW"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <EditText
+                android:id="@+id/lampPR3OnTime"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="24dp"
+                android:focusableInTouchMode="false"
+                android:textColor="@color/colorSecText"
+                android:hint="On" />
+            <EditText
+                android:id="@+id/lampPR3OffTime"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="24dp"
+                android:focusableInTouchMode="false"
+                android:textColor="@color/colorSecText"
+                android:hint="Off" />
+        </TableRow>
+    </TableLayout>
+
+    <!--<android.support.design.widget.BottomNavigationView
+        android:id="@+id/navigation"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="0dp"
+        android:layout_marginEnd="0dp"
+        android:background="?android:attr/windowBackground"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:menu="@menu/navigation" />-->
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="20dp" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="410dp" />
+
+</android.support.constraint.ConstraintLayout>
