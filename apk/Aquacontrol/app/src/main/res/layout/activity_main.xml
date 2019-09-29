@@ -64,7 +64,7 @@
             android:layout_height="match_parent"
             android:layout_marginLeft="64dp"
             android:gravity="center_vertical"
-            android:text="Filter:"
+            android:text="@string/filter"
             android:textColor="@color/colorMainText"
             android:textStyle="bold" />
 
@@ -90,7 +90,7 @@
             android:layout_height="match_parent"
             android:layout_marginLeft="64dp"
             android:gravity="center_vertical"
-            android:text="Heater:"
+            android:text="@string/heater"
             android:textColor="@color/colorMainText"
             android:textStyle="bold" />
 
@@ -116,12 +116,12 @@
             android:layout_height="match_parent"
             android:layout_marginLeft="64dp"
             android:gravity="center_vertical"
-            android:text="Lamp:"
+            android:text="@string/aerator"
             android:textColor="@color/colorMainText"
             android:textStyle="bold" />
 
         <Switch
-            android:id="@+id/lampSW"
+            android:id="@+id/aeratorSW"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </LinearLayout>
@@ -142,7 +142,7 @@
                 android:layout_height="50dp"
                 android:layout_marginLeft="64dp"
                 android:gravity="center_vertical"
-                android:text="Lamp:"
+                android:text="@string/lamp"
                 android:textColor="@color/colorMainText"
                 android:textStyle="bold" />
 
@@ -158,7 +158,7 @@
                 android:layout_height="50dp"
                 android:layout_marginLeft="64dp"
                 android:gravity="center_vertical"
-                android:text="Lamp Automatic:"
+                android:text="@string/auto_mode"
                 android:textColor="@color/colorMainText"
                 android:textStyle="bold" />
 
@@ -173,7 +173,7 @@
                 android:layout_height="50dp"
                 android:layout_marginLeft="64dp"
                 android:gravity="center_vertical"
-                android:text="Program 1:"
+                android:text="@string/prog1"
                 android:textColor="@color/colorMainText"
                 android:textStyle="bold" />
 
@@ -205,7 +205,7 @@
                 android:layout_height="50dp"
                 android:layout_marginLeft="64dp"
                 android:gravity="center_vertical"
-                android:text="Program 2:"
+                android:text="@string/prog2"
                 android:textColor="@color/colorMainText"
                 android:textStyle="bold" />
 
@@ -237,7 +237,7 @@
                 android:layout_height="50dp"
                 android:layout_marginLeft="64dp"
                 android:gravity="center_vertical"
-                android:text="Program 3:"
+                android:text="@string/prog3"
                 android:textColor="@color/colorMainText"
                 android:textStyle="bold" />
 
@@ -262,6 +262,94 @@
                 android:focusableInTouchMode="false"
                 android:textColor="@color/colorSecText"
                 android:hint="Off" />
+        </TableRow>
+    </TableLayout>
+
+    <TableLayout
+        android:id="@+id/tableInfo"
+        android:layout_width="392dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:gravity="center_vertical"
+        android:background="@drawable/rounded_corners"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tableLamp">
+        <TableRow>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:layout_marginLeft="64dp"
+                android:gravity="center_vertical"
+                android:text="@string/version"
+                android:textColor="@color/colorMainText"
+                android:textStyle="bold" />
+            <TextView
+                android:id="@+id/Version"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:layout_marginLeft="64dp"
+                android:gravity="center_vertical"
+                android:text="@string/version"
+                android:textColor="@color/colorSecText"
+                android:textStyle="bold" />
+        </TableRow>
+        <TableRow>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:layout_marginLeft="64dp"
+                android:gravity="center_vertical"
+                android:text="@string/ip"
+                android:textColor="@color/colorMainText"
+                android:textStyle="bold" />
+            <TextView
+                android:id="@+id/IP"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:layout_marginLeft="64dp"
+                android:gravity="center_vertical"
+                android:text="@string/ip"
+                android:textColor="@color/colorSecText"
+                android:textStyle="bold" />
+        </TableRow>
+        <TableRow>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:layout_marginLeft="64dp"
+                android:gravity="center_vertical"
+                android:text="@string/active"
+                android:textColor="@color/colorMainText"
+                android:textStyle="bold" />
+            <TextView
+                android:id="@+id/timeActive"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:layout_marginLeft="64dp"
+                android:gravity="center_vertical"
+                android:text="@string/active"
+                android:textColor="@color/colorSecText"
+                android:textStyle="bold" />
+        </TableRow>
+        <TableRow>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:layout_marginLeft="64dp"
+                android:gravity="center_vertical"
+                android:text="@string/lastmsg"
+                android:textColor="@color/colorMainText"
+                android:textStyle="bold" />
+            <TextView
+                android:id="@+id/lastMsg"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:layout_marginLeft="64dp"
+                android:gravity="center_vertical"
+                android:text="@string/lastmsg"
+                android:textColor="@color/colorSecText"
+                android:textStyle="bold" />
         </TableRow>
     </TableLayout>
 

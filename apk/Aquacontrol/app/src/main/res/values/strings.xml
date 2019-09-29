@@ -1,3 +1,17 @@
 <resources>
     <string name="app_name">Aquacontrol</string>
+    <string name="temp">Temperature (ºC)</string>
+    <string name="filter">Filter</string>
+    <string name="heater">Heater</string>
+    <string name="aerator">Aerator</string>
+    <string name="lamp">Lamp</string>
+    <string name="auto_mode">Auto mode</string>
+    <string name="prog1">Program 1</string>
+    <string name="prog2">Program 2</string>
+    <string name="prog3">Program 3</string>
+    <string name="version">Version</string>
+    <string name="ip">IP</string>
+    <string name="active">Active since:</string>
+    <string name="lastmsg">Last message: </string>
+
 </resources>

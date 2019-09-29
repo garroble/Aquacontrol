@@ -134,6 +134,22 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        Switch swAerator = (Switch) findViewById(R.id.aeratorSW);
+        swAerator.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                String topic = Constants.MQTT_AERA_CTL;
+                if (b) {
+                    String msg = Constants.MQTT_ON;
+                    mqttPublishTo(topic,msg);
+                }
+                else {
+                    String msg = Constants.MQTT_OFF;
+                    mqttPublishTo(topic,msg);
+                }
+            }
+        });
+
         Switch swLamp = (Switch) findViewById(R.id.lampSW);
         swLamp.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -155,11 +171,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 String topic = Constants.MQTT_LAMP_CTL_AUTO;
+                Switch swLamp      = (Switch) findViewById(R.id.lampSW);
                 Switch swLampProg1 = (Switch) findViewById(R.id.lampProg1SW);
                 Switch swLampProg2 = (Switch) findViewById(R.id.lampProg2SW);
                 Switch swLampProg3 = (Switch) findViewById(R.id.lampProg3SW);
                 if (b) {
                     String msg = Constants.MQTT_ON;
+                    swLamp.setEnabled(false);
                     swLampProg1.setEnabled(true);
                     swLampProg2.setEnabled(true);
                     swLampProg3.setEnabled(true);
@@ -167,6 +185,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 else {
                     String msg = Constants.MQTT_OFF;
+                    swLamp.setEnabled(true);
                     swLampProg1.setEnabled(false);
                     swLampProg2.setEnabled(false);
                     swLampProg3.setEnabled(false);
@@ -227,11 +246,11 @@ public class MainActivity extends AppCompatActivity {
                         String topic = Constants.MQTT_LAMP_CTL_A0OFF;
                         String s_time = "0:00";
                         s_time = String.format("%02d:%02d", hourOfDay, minutes);
-                        lampP1OnTime.setText(s_time);
+                        lampP1OffTime.setText(s_time);
                         mqttPublishTo(topic,s_time);
                     }
                 }, currentHour, currentMinute, true);
-                timePickerDialog.setTitle("Select ON Time");
+                timePickerDialog.setTitle("Select OFF Time");
                 timePickerDialog.show();
             }
         });
@@ -252,6 +271,51 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        final EditText  lampP2OnTime = findViewById(R.id.lampPR2OnTime);
+        lampP2OnTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick (View view) {
+                Calendar calendar = Calendar.getInstance();
+                int currentHour = calendar.get(Calendar.HOUR_OF_DAY);
+                int currentMinute = calendar.get(Calendar.MINUTE);
+                TimePickerDialog timePickerDialog = new TimePickerDialog(MainActivity.this, new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker timePicker, int hourOfDay, int minutes) {
+                        String topic = Constants.MQTT_LAMP_CTL_A1ON;
+                        String s_time = "0:00";
+                        s_time = String.format("%02d:%02d", hourOfDay, minutes);
+                        lampP2OnTime.setText(s_time);
+                        mqttPublishTo(topic,s_time);
+                    }
+                }, currentHour, currentMinute, true);
+                timePickerDialog.setTitle("Select ON Time");
+                timePickerDialog.show();
+            }
+
+        });
+
+        final EditText  lampP2OffTime = findViewById(R.id.lampPR2OffTime);
+        lampP2OffTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick (View view) {
+                Calendar calendar = Calendar.getInstance();
+                int currentHour = calendar.get(Calendar.HOUR_OF_DAY);
+                int currentMinute = calendar.get(Calendar.MINUTE);
+                TimePickerDialog timePickerDialog = new TimePickerDialog(MainActivity.this, new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker timePicker, int hourOfDay, int minutes) {
+                        String topic = Constants.MQTT_LAMP_CTL_A1OFF;
+                        String s_time = "0:00";
+                        s_time = String.format("%02d:%02d", hourOfDay, minutes);
+                        lampP2OffTime.setText(s_time);
+                        mqttPublishTo(topic,s_time);
+                    }
+                }, currentHour, currentMinute, true);
+                timePickerDialog.setTitle("Select OFF Time");
+                timePickerDialog.show();
+            }
+        });
+
         Switch swLampProg3 = (Switch) findViewById(R.id.lampProg3SW);
         swLampProg3.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -268,6 +332,51 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        final EditText  lampP3OnTime = findViewById(R.id.lampPR3OnTime);
+        lampP3OnTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick (View view) {
+                Calendar calendar = Calendar.getInstance();
+                int currentHour = calendar.get(Calendar.HOUR_OF_DAY);
+                int currentMinute = calendar.get(Calendar.MINUTE);
+                TimePickerDialog timePickerDialog = new TimePickerDialog(MainActivity.this, new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker timePicker, int hourOfDay, int minutes) {
+                        String topic = Constants.MQTT_LAMP_CTL_A2ON;
+                        String s_time = "0:00";
+                        s_time = String.format("%02d:%02d", hourOfDay, minutes);
+                        lampP3OnTime.setText(s_time);
+                        mqttPublishTo(topic,s_time);
+                    }
+                }, currentHour, currentMinute, true);
+                timePickerDialog.setTitle("Select ON Time");
+                timePickerDialog.show();
+            }
+
+        });
+
+        final EditText  lampP3OffTime = findViewById(R.id.lampPR3OffTime);
+        lampP3OffTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick (View view) {
+                Calendar calendar = Calendar.getInstance();
+                int currentHour = calendar.get(Calendar.HOUR_OF_DAY);
+                int currentMinute = calendar.get(Calendar.MINUTE);
+                TimePickerDialog timePickerDialog = new TimePickerDialog(MainActivity.this, new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker timePicker, int hourOfDay, int minutes) {
+                        String topic = Constants.MQTT_LAMP_CTL_A2OFF;
+                        String s_time = "0:00";
+                        s_time = String.format("%02d:%02d", hourOfDay, minutes);
+                        lampP3OffTime.setText(s_time);
+                        mqttPublishTo(topic,s_time);
+                    }
+                }, currentHour, currentMinute, true);
+                timePickerDialog.setTitle("Select OFF Time");
+                timePickerDialog.show();
+            }
+        });
+
         //TODO: Improve subscribing avoiding 1 second delay on APP launch
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
@@ -280,6 +389,8 @@ public class MainActivity extends AppCompatActivity {
                 mqttSubscriteTo(Constants.MQTT_AQU_LAMP_STA);
                 mqttSubscriteTo(Constants.MQTT_LAMP_CTL_AUTO);
                 mqttSubscriteTo(Constants.MQTT_LAMP_CTL_A0ACT);
+                mqttSubscriteTo(Constants.MQTT_LAMP_CTL_A1ACT);
+                mqttSubscriteTo(Constants.MQTT_LAMP_CTL_A2ACT);
                 mqttSubscriteTo(Constants.MQTT_AQU_AERA_STA);
                 mqttSubscriteTo(Constants.MQTT_AQU_HEAT_STA);
                 mqttSubscriteTo(Constants.MQTT_AQU_FILT_STA);
@@ -377,48 +488,51 @@ public class MainActivity extends AppCompatActivity {
                 }
                 else if(topic.equals(Constants.MQTT_AQU_FILT_STA)) {
                     Switch swFilter = (Switch) findViewById(R.id.filterSW);
-                    if (message.toString().matches(Constants.MQTT_ON)) {
-                        swFilter.setChecked(true);
-                    }
-                    else {
-                        swFilter.setChecked(false);
-                    }
+                    aquaCtl(swFilter, message);
                 }
                 else if(topic.equals(Constants.MQTT_AQU_HEAT_STA)) {
                     Switch swHeater = (Switch) findViewById(R.id.heaterSW);
-                    if (message.toString().matches(Constants.MQTT_ON)) {
-                        swHeater.setChecked(true);
-                    }
-                    else {
-                        swHeater.setChecked(false);
-                    }
+                    aquaCtl(swHeater, message);
+                }
+                else if(topic.equals(Constants.MQTT_AQU_AERA_STA)) {
+                    Switch swAerator = (Switch) findViewById(R.id.aeratorSW);
+                    aquaCtl(swAerator, message);
                 }
                 else if(topic.equals(Constants.MQTT_AQU_LAMP_STA)) {
                     Switch swLamp = (Switch) findViewById(R.id.lampSW);
-                    if (message.toString().matches(Constants.MQTT_ON)) {
-                        swLamp.setChecked(true);
-                    }
-                    else {
-                        swLamp.setChecked(false);
-                    }
+                    aquaCtl(swLamp, message);
                 }
                 else if(topic.equals(Constants.MQTT_LAMP_CTL_AUTO)) {
-                    Switch swLamp = (Switch) findViewById(R.id.lampAutoSW);
-                    if (message.toString().matches(Constants.MQTT_ON)) {
-                        swLamp.setChecked(true);
-                    }
-                    else {
-                        swLamp.setChecked(false);
-                    }
+                    Switch swLampAuto = (Switch) findViewById(R.id.lampAutoSW);
+                    aquaCtl(swLampAuto, message);
                 }
                 else if(topic.equals(Constants.MQTT_LAMP_CTL_A0ACT)) {
-                    Switch swLamp = (Switch) findViewById(R.id.lampProg1SW);
-                    if (message.toString().matches(Constants.MQTT_ON)) {
-                        swLamp.setChecked(true);
-                    }
-                    else {
-                        swLamp.setChecked(false);
-                    }
+                    Switch swLampP1 = (Switch) findViewById(R.id.lampProg1SW);
+                    aquaCtl(swLampP1, message);
+                }
+                else if(topic.equals(Constants.MQTT_LAMP_CTL_A1ACT)) {
+                    Switch swLampP2 = (Switch) findViewById(R.id.lampProg2SW);
+                    aquaCtl(swLampP2, message);
+                }
+                else if(topic.equals(Constants.MQTT_LAMP_CTL_A2ACT)) {
+                    Switch swLampP3 = (Switch) findViewById(R.id.lampProg3SW);
+                    aquaCtl(swLampP3, message);
+                }
+                else if(topic.equals(Constants.MQTT_AQU_VERS)) {
+                    TextView tvVersion = (TextView) findViewById(R.id.Version);
+                    tvVersion.setText(message.toString());
+                }
+                else if(topic.equals(Constants.MQTT_AQU_IP)) {
+                    TextView tvVersion = (TextView) findViewById(R.id.IP);
+                    tvVersion.setText(message.toString());
+                }
+                else if(topic.equals(Constants.MQTT_AQU_RST)) {
+                    TextView tvVersion = (TextView) findViewById(R.id.timeActive);
+                    tvVersion.setText(message.toString());
+                }
+                else if(topic.equals(Constants.MQTT_AQU_TIME)) {
+                    TextView tvVersion = (TextView) findViewById(R.id.lastMsg);
+                    tvVersion.setText(message.toString());
                 }
                 else {
 
@@ -430,5 +544,14 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    private void aquaCtl(Switch sw,MqttMessage message ) {
+        if (message.toString().matches(Constants.MQTT_ON)) {
+            sw.setChecked(true);
+        }
+        else {
+            sw.setChecked(false);
+        }
     }
 }

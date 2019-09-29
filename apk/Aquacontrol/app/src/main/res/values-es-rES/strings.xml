@@ -1,2 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="app_name">Aquacontrol</string>
+    <string name="temp">Temperatura (ºC)</string>
+    <string name="auto_mode">Modo Auto</string>
+    <string name="filter">Filtro</string>
+    <string name="heater">Calentador</string>
+    <string name="lamp">Lámpara</string>
+    <string name="prog1">Programa 1</string>
+    <string name="prog2">Programa 2</string>
+    <string name="prog3">Programa 3</string>
+    <string name="aerator">Aireador</string>
+</resources>
