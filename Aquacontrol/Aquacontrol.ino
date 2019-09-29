@@ -272,7 +272,7 @@ void MQTT_Setup() {
       Serial.println("connected");
     } else {
       Serial.print("failed with state ");
-      Serial.print(mqtt_client.state());
+      Serial.println(mqtt_client.state());
       delay(2000);
     }
   }
@@ -500,7 +500,7 @@ void aeraSetAutoProg(byte b_Prog, bool b_ProgOn,bool b_OnOff, byte* message) {
   i_minute  = ((int)message[3] - '0')*10 + ((int)message[4] - '0');
   Serial.print("Set Auto Aerator ");
   Serial.print(b_Prog);
-  Aquarium.Aerator.Program[b_Prog].b_Active = b_ProgOn;
+  //Aquarium.Aerator.Program[b_Prog].b_Active = b_ProgOn;
   if (b_ProgOn) {
     Serial.print(" program to ");
     if (b_OnOff) {
@@ -625,7 +625,7 @@ void lampSetAutoProg(byte b_Prog, bool b_ProgOn,bool b_OnOff, byte* message) {
   i_minute  = ((int)message[3] - '0')*10 + ((int)message[4] - '0');
   Serial.print("Set Auto Lamp ");
   Serial.print(b_Prog);
-  Aquarium.Lamp.Program[b_Prog].b_Active = b_ProgOn;
+  //Aquarium.Lamp.Program[b_Prog].b_Active = b_ProgOn;
   if (b_ProgOn) {
     Serial.print(" program to ");
     if (b_OnOff) {
