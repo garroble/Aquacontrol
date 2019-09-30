@@ -3,6 +3,8 @@
     <string name="temp">Temperature (ºC)</string>
     <string name="filter">Filter</string>
     <string name="heater">Heater</string>
+    <string name="tempmax">Maximum temperature:</string>
+    <string name="tempmin">Minimum temperature:</string>
     <string name="aerator">Aerator</string>
     <string name="lamp">Lamp</string>
     <string name="auto_mode">Auto mode</string>

@@ -20,7 +20,7 @@
     <LinearLayout
         android:id="@+id/linearTemp"
         android:layout_width="392dp"
-        android:layout_height="50dp"
+        android:layout_height="40dp"
         android:layout_marginTop="20dp"
         android:background="@drawable/rounded_corners"
         android:orientation="horizontal"
@@ -33,7 +33,7 @@
             android:layout_height="match_parent"
             android:layout_marginLeft="64dp"
             android:gravity="center_vertical"
-            android:text="Temperature (ºC):"
+            android:text="@string/temp"
             android:textColor="@color/colorMainText"
             android:textStyle="bold" />
 
@@ -43,7 +43,7 @@
             android:layout_height="match_parent"
             android:layout_marginLeft="8dp"
             android:gravity="center_vertical"
-            android:textColor="@color/colorMainText"
+            android:textColor="@color/colorSecText"
             android:textStyle="bold" />
 
     </LinearLayout>
@@ -51,8 +51,8 @@
     <LinearLayout
         android:id="@+id/linearFilter"
         android:layout_width="392dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="20dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="@dimen/spacing"
         android:background="@drawable/rounded_corners"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
@@ -75,6 +75,104 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/linearAerator"
+        android:layout_width="392dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="@dimen/spacing"
+        android:background="@drawable/rounded_corners"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearFilter">
+
+        <TextView
+            android:layout_width="192dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="64dp"
+            android:gravity="center_vertical"
+            android:text="@string/aerator"
+            android:textColor="@color/colorMainText"
+            android:textStyle="bold" />
+
+        <Switch
+            android:id="@+id/aeratorSW"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <TableLayout
+        android:id="@+id/tableHeater"
+        android:layout_width="392dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing"
+        android:gravity="center_vertical"
+        android:background="@drawable/rounded_corners"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearAerator">
+        <TableRow>
+            <TextView
+                android:layout_width="192dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="64dp"
+                android:gravity="center_vertical"
+                android:text="@string/heater"
+                android:textColor="@color/colorMainText"
+                android:textStyle="bold" />
+            <Switch
+                android:id="@+id/heaterSW"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </TableRow>
+        <TableRow>
+            <TextView
+                android:layout_width="192dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="64dp"
+                android:gravity="center_vertical"
+                android:text="@string/tempmax"
+                android:textColor="@color/colorMainText"
+                android:textStyle="bold" />
+            <EditText
+                android:id="@+id/tempMax"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="24dp"
+                android:gravity="center_vertical"
+                android:textColor="@color/colorSecText"
+                android:hint="30" />
+        </TableRow>
+        <TableRow>
+            <SeekBar
+                android:layout_width="192dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="64dp"
+                android:max="30"
+                android:min="20"
+                android:progress="1"
+                android:gravity="center_vertical"
+                android:textStyle="bold" />
+        </TableRow>
+        <TableRow>
+            <TextView
+                android:layout_width="192dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="64dp"
+                android:gravity="center_vertical"
+                android:text="@string/tempmin"
+                android:textColor="@color/colorMainText"
+                android:textStyle="bold" />
+            <EditText
+                android:id="@+id/tempMin"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="24dp"
+                android:gravity="center_vertical"
+                android:textColor="@color/colorSecText"
+                android:hint="20" />
+        </TableRow>
+    </TableLayout>
+<!--    <LinearLayout
         android:id="@+id/linearHeater"
         android:layout_width="392dp"
         android:layout_height="50dp"
@@ -98,44 +196,18 @@
             android:id="@+id/heaterSW"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/linearLamp"
-        android:layout_width="392dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/rounded_corners"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearHeater">
-
-        <TextView
-            android:layout_width="192dp"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="64dp"
-            android:gravity="center_vertical"
-            android:text="@string/aerator"
-            android:textColor="@color/colorMainText"
-            android:textStyle="bold" />
-
-        <Switch
-            android:id="@+id/aeratorSW"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
+    </LinearLayout>-->
 
     <TableLayout
         android:id="@+id/tableLamp"
         android:layout_width="392dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="@dimen/spacing"
         android:gravity="center_vertical"
         android:background="@drawable/rounded_corners"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLamp">
+        app:layout_constraintTop_toBottomOf="@+id/tableHeater">
         <TableRow>
             <TextView
                 android:layout_width="wrap_content"
@@ -269,7 +341,7 @@
         android:id="@+id/tableInfo"
         android:layout_width="392dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="@dimen/spacing"
         android:gravity="center_vertical"
         android:background="@drawable/rounded_corners"
         app:layout_constraintEnd_toEndOf="parent"

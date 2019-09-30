@@ -10,4 +10,10 @@
     <string name="prog2">Programa 2</string>
     <string name="prog3">Programa 3</string>
     <string name="aerator">Aireador</string>
+    <string name="ip">IP</string>
+    <string name="lastmsg">Último Mensaje:</string>
+    <string name="version">Versión</string>
+    <string name="active">Activo desde:</string>
+    <string name="tempmax">Temperatura Máxima:</string>
+    <string name="tempmin">Temperatura Mínima:</string>
 </resources>

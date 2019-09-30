@@ -18,8 +18,11 @@ import android.widget.TextView;
 import android.widget.EditText;
 import android.widget.TimePicker;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Random;
+import java.util.TimeZone;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -199,9 +202,15 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 String topic = Constants.MQTT_LAMP_CTL_A0ACT;
+                String topicOn = Constants.MQTT_LAMP_CTL_A0ON;
+                String topicOff = Constants.MQTT_LAMP_CTL_A0OFF;
                 if (b) {
                     String msg = Constants.MQTT_ON;
+                    EditText lampOnTime = (EditText) findViewById(R.id.lampPR1OnTime);
+                    EditText lampOffTime = (EditText) findViewById(R.id.lampPR1OffTime);
                     mqttPublishTo(topic,msg);
+                    mqttPublishTo(topicOn,lampOnTime.getText().toString());
+                    mqttPublishTo(topicOff,lampOffTime.getText().toString());
                 }
                 else {
                     String msg = Constants.MQTT_OFF;
@@ -259,10 +268,16 @@ public class MainActivity extends AppCompatActivity {
         swLampProg2.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                String topic = Constants.MQTT_LAMP_CTL_A1ACT;
+                String topic    = Constants.MQTT_LAMP_CTL_A1ACT;
+                String topicOn  = Constants.MQTT_LAMP_CTL_A1ON;
+                String topicOff = Constants.MQTT_LAMP_CTL_A1OFF;
                 if (b) {
                     String msg = Constants.MQTT_ON;
+                    EditText lampOnTime = (EditText) findViewById(R.id.lampPR2OnTime);
+                    EditText lampOffTime = (EditText) findViewById(R.id.lampPR2OffTime);
                     mqttPublishTo(topic,msg);
+                    mqttPublishTo(topicOn,lampOnTime.getText().toString());
+                    mqttPublishTo(topicOff,lampOffTime.getText().toString());
                 }
                 else {
                     String msg = Constants.MQTT_OFF;
@@ -320,10 +335,16 @@ public class MainActivity extends AppCompatActivity {
         swLampProg3.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                String topic = Constants.MQTT_LAMP_CTL_A2ACT;
+                String topic    = Constants.MQTT_LAMP_CTL_A2ACT;
+                String topicOn  = Constants.MQTT_LAMP_CTL_A2ON;
+                String topicOff = Constants.MQTT_LAMP_CTL_A2OFF;
                 if (b) {
                     String msg = Constants.MQTT_ON;
+                    EditText lampOnTime = (EditText) findViewById(R.id.lampPR3OnTime);
+                    EditText lampOffTime = (EditText) findViewById(R.id.lampPR3OffTime);
                     mqttPublishTo(topic,msg);
+                    mqttPublishTo(topicOn,lampOnTime.getText().toString());
+                    mqttPublishTo(topicOff,lampOffTime.getText().toString());
                 }
                 else {
                     String msg = Constants.MQTT_OFF;
@@ -389,8 +410,14 @@ public class MainActivity extends AppCompatActivity {
                 mqttSubscriteTo(Constants.MQTT_AQU_LAMP_STA);
                 mqttSubscriteTo(Constants.MQTT_LAMP_CTL_AUTO);
                 mqttSubscriteTo(Constants.MQTT_LAMP_CTL_A0ACT);
+                mqttSubscriteTo(Constants.MQTT_LAMP_CTL_A0ON);
+                mqttSubscriteTo(Constants.MQTT_LAMP_CTL_A0OFF);
                 mqttSubscriteTo(Constants.MQTT_LAMP_CTL_A1ACT);
+                mqttSubscriteTo(Constants.MQTT_LAMP_CTL_A1ON);
+                mqttSubscriteTo(Constants.MQTT_LAMP_CTL_A1OFF);
                 mqttSubscriteTo(Constants.MQTT_LAMP_CTL_A2ACT);
+                mqttSubscriteTo(Constants.MQTT_LAMP_CTL_A2ON);
+                mqttSubscriteTo(Constants.MQTT_LAMP_CTL_A2OFF);
                 mqttSubscriteTo(Constants.MQTT_AQU_AERA_STA);
                 mqttSubscriteTo(Constants.MQTT_AQU_HEAT_STA);
                 mqttSubscriteTo(Constants.MQTT_AQU_FILT_STA);
@@ -510,29 +537,63 @@ public class MainActivity extends AppCompatActivity {
                     Switch swLampP1 = (Switch) findViewById(R.id.lampProg1SW);
                     aquaCtl(swLampP1, message);
                 }
+                else if(topic.equals(Constants.MQTT_LAMP_CTL_A0ON)) {
+                    EditText etP1On = (EditText) findViewById(R.id.lampPR1OnTime);
+                    etP1On.setText(message.toString());
+                }
+                else if(topic.equals(Constants.MQTT_LAMP_CTL_A0OFF)) {
+                    EditText etP1Off = (EditText) findViewById(R.id.lampPR1OffTime);
+                    etP1Off.setText(message.toString());
+                }
                 else if(topic.equals(Constants.MQTT_LAMP_CTL_A1ACT)) {
                     Switch swLampP2 = (Switch) findViewById(R.id.lampProg2SW);
                     aquaCtl(swLampP2, message);
                 }
+                else if(topic.equals(Constants.MQTT_LAMP_CTL_A1ON)) {
+                    EditText etP2On = (EditText) findViewById(R.id.lampPR2OnTime);
+                    etP2On.setText(message.toString());
+                }
+                else if(topic.equals(Constants.MQTT_LAMP_CTL_A1OFF)) {
+                    EditText etP2Off = (EditText) findViewById(R.id.lampPR2OffTime);
+                    etP2Off.setText(message.toString());
+                }
                 else if(topic.equals(Constants.MQTT_LAMP_CTL_A2ACT)) {
                     Switch swLampP3 = (Switch) findViewById(R.id.lampProg3SW);
                     aquaCtl(swLampP3, message);
+                }
+                else if(topic.equals(Constants.MQTT_LAMP_CTL_A2ON)) {
+                    EditText etP3On = (EditText) findViewById(R.id.lampPR3OnTime);
+                    etP3On.setText(message.toString());
+                }
+                else if(topic.equals(Constants.MQTT_LAMP_CTL_A2OFF)) {
+                    EditText etP3Off = (EditText) findViewById(R.id.lampPR3OffTime);
+                    etP3Off.setText(message.toString());
                 }
                 else if(topic.equals(Constants.MQTT_AQU_VERS)) {
                     TextView tvVersion = (TextView) findViewById(R.id.Version);
                     tvVersion.setText(message.toString());
                 }
                 else if(topic.equals(Constants.MQTT_AQU_IP)) {
-                    TextView tvVersion = (TextView) findViewById(R.id.IP);
-                    tvVersion.setText(message.toString());
+                    TextView tvIP = (TextView) findViewById(R.id.IP);
+                    tvIP.setText(message.toString());
                 }
                 else if(topic.equals(Constants.MQTT_AQU_RST)) {
-                    TextView tvVersion = (TextView) findViewById(R.id.timeActive);
-                    tvVersion.setText(message.toString());
+                    TextView tvActive = (TextView) findViewById(R.id.timeActive);
+                    String   time = getDate(message.toString());
+                    tvActive.setText(time);
                 }
                 else if(topic.equals(Constants.MQTT_AQU_TIME)) {
-                    TextView tvVersion = (TextView) findViewById(R.id.lastMsg);
-                    tvVersion.setText(message.toString());
+                    TextView tvLast = (TextView) findViewById(R.id.lastMsg);
+                    String   time = getDate(message.toString());
+                    tvLast.setText(time);
+                }
+                else if(topic.equals(Constants.MQTT_AQU_TEMP_TMAX)) {
+                    EditText etTempMax = (EditText) findViewById(R.id.tempMax);
+                    etTempMax.setText(message.toString());
+                }
+                else if(topic.equals(Constants.MQTT_AQU_TEMP_TMIN)) {
+                    EditText etTempMin = (EditText) findViewById(R.id.tempMin);
+                    etTempMin.setText(message.toString());
                 }
                 else {
 
@@ -553,5 +614,24 @@ public class MainActivity extends AppCompatActivity {
         else {
             sw.setChecked(false);
         }
+    }
+
+    private String getDate(String ourDate)
+    {
+        try
+        {
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+            formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+            Date value = formatter.parse(ourDate);
+
+            SimpleDateFormat dateFormatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss"); //this format changeable
+            dateFormatter.setTimeZone(TimeZone.getDefault());
+            ourDate = dateFormatter.format(value);
+        }
+        catch (Exception e)
+        {
+            ourDate = "00-00-0000 00:00";
+        }
+        return ourDate;
     }
 }
