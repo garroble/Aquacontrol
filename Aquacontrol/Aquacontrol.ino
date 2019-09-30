@@ -17,7 +17,7 @@ DS3231M_Class       RTClock;                // Instance DS3231M RTC Clock
 WiFiClient          espClient;
 WiFiUDP             ntpUDP;                 // UDP Link for NTP
 WiFiManager         wifiManager;            // WiFi Manager
-NTPClient           timeClient(ntpUDP, "pool.ntp.org", GMTp1_OFF);
+NTPClient           timeClient(ntpUDP, "pool.ntp.org", GMTp0_OFFSET);
 PubSubClient        mqtt_client(espClient);
 AquariumData        Aquarium;
 wl_status_t         wifi_status = WL_DISCONNECTED;
@@ -70,7 +70,9 @@ void Aquarium_Default() {
   }
   Aquarium.b_RTCavailable = false;
   TempSensor.requestTemperatures();
-  Aquarium.f_Temperature = TempSensor.getTempCByIndex(0);
+  Aquarium.Temperature.f_Current = TempSensor.getTempCByIndex(0);
+  Aquarium.Temperature.f_Max = TEMP_MAX;
+  Aquarium.Temperature.f_Min = TEMP_MIN;
 }
 
 /*****************************************/
@@ -252,6 +254,12 @@ void mqtt_callback(char* topic, byte* payload, unsigned int length) {
   else if (strcmp(topic, MQTT_LAMP_CTL_A2OFF) == 0) {
     lampSetAutoProg(2,true,LAMP_OFF,payload);
   }
+  else if (strcmp(topic, MQTT_AQU_TEMP_TMAX) == 0) {
+    tempSet(true, payload);
+  }
+  else if (strcmp(topic, MQTT_AQU_TEMP_TMIN) == 0) {
+    tempSet(false, payload);
+  }
   else {
     Serial.println("Unknonw message");
   }
@@ -296,6 +304,8 @@ void MQTT_Setup() {
   mqtt_client.subscribe(MQTT_HEAT_CTL);
   mqtt_client.subscribe(MQTT_FILT_CTL);
 
+  mqtt_client.subscribe(MQTT_AQU_TEMP_TMAX);
+  mqtt_client.subscribe(MQTT_AQU_TEMP_TMIN);
 }
 
 // RTC_Setup
@@ -352,7 +362,7 @@ void pubResetData() {
   else                           { mqtt_client.publish(MQTT_AQU_HEAT_STA, "off", true); }
   if (Aquarium.Filter.b_Status)  { mqtt_client.publish(MQTT_AQU_FILT_STA, "on", true); }
   else                           { mqtt_client.publish(MQTT_AQU_FILT_STA, "off", true); }
-  tempString = Aquarium.f_Temperature;
+  tempString = Aquarium.Temperature.f_Current;
   mqtt_client.publish(MQTT_AQU_TEMP, tempString.c_str(), true);
   mqtt_client.publish(MQTT_AQU_VERS, VERSION, true);
 }
@@ -379,12 +389,12 @@ void pubTimestamp() {
 // Publish Aquarium Temperature
 void pubTemperature() {
   String  tempString;
-  Aquarium.f_Temperature = TempSensor.getTempCByIndex(0);
-  tempString = Aquarium.f_Temperature;
+  Aquarium.Temperature.f_Current = TempSensor.getTempCByIndex(0);
+  tempString = Aquarium.Temperature.f_Current;
   mqtt_client.publish(MQTT_AQU_TEMP, tempString.c_str(), true);
   pubTimestamp();
   Serial.print("----> Aquarium Temperature: ");
-  Serial.println(Aquarium.f_Temperature);
+  Serial.println(Aquarium.Temperature.f_Current);
 }
 
 /********************/
@@ -442,6 +452,23 @@ void heaterSetManual(bool b_turn) {
   if (Aquarium.Heater.b_AutoMode == false) {
     Aquarium.Heater.b_Control = b_turn;
     heaterSet(b_turn);
+  }
+}
+
+// heatLoopCtl
+// Control heater if temperature exceeds maximum or minimum temperature.
+void heatLoopCtl() {
+  if (Aquarium.Temperature.f_Current > Aquarium.Temperature.f_Max) {
+    Aquarium.Heater.b_Control = false;
+    heaterSet(false);
+  }
+  else if( (Aquarium.Temperature.f_Current < Aquarium.Temperature.f_Max) &&
+           (Aquarium.Temperature.f_Current > Aquarium.Temperature.f_Min) ) {
+    Aquarium.Heater.b_Control = true;
+    heaterSet(true);
+  } else {
+    Aquarium.Heater.b_Control = false;
+    heaterSet(false);
   }
 }
 
@@ -681,6 +708,17 @@ void lampLoopCtl() {
   }
 }
 
+// tempSet
+// Set Temperatures for Maxium and Minimum
+void tempSet(byte b_Prog, byte* message) {
+  if (b_Prog) {
+    Aquarium.Temperature.f_Max = ((int)message[0] - '0')*10 + ((int)message[1] - '0');
+  }
+  else {
+    Aquarium.Temperature.f_Min = ((int)message[0] - '0')*10 + ((int)message[1] - '0');
+  }
+}
+
 /*  ARDUINO SETUP   */
 void setup() {
   // put your setup code here, to run once:
@@ -734,6 +772,7 @@ void loop() {
     // Control Aquarium
     pubTemperature();
     lampLoopCtl();
+    heatLoopCtl();
     l_startCtlTime = millis();
   }
 }

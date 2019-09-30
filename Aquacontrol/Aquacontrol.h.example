@@ -13,8 +13,11 @@
 #define   I2C_SDA       (2)
 #define   I2C_SCL       (14)
 #define   SERIAL_SPEED  (115200)
-#define   GMTp1_OFF     (3600)
-#define   CTL_TIME      (30)
+#define   GMTp0_OFFSET  (0)
+#define   GMTp1_OFFSET  (3600)
+#define   CTL_TIME      (60)
+#define   TEMP_MAX      (30)
+#define   TEMP_MIN      (20)
 
 #define   LAMP_ON       (HIGH)
 #define   LAMP_OFF      (LOW)
@@ -39,7 +42,10 @@
 #define   MQTT_AQU_AERA_STA   "aquarium/aerator/status"
 #define   MQTT_AQU_HEAT_STA   "aquarium/heater/status"
 #define   MQTT_AQU_FILT_STA   "aquarium/filter/status"
-#define   MQTT_AQU_TEMP       "aquarium/temperature"
+#define   MQTT_AQU_TEMP       "aquarium/temperature/current"
+
+#define   MQTT_AQU_TEMP_TMAX  "aquarium/temperature/tempmax"
+#define   MQTT_AQU_TEMP_TMIN  "aquarium/temperature/tempmin"
 
 #define   MQTT_LAMP_CTL       "aquarium/lamp/control"
 #define   MQTT_LAMP_CTL_AUTO  "aquarium/lamp/automode"
@@ -95,12 +101,18 @@ struct AquariumTech {
   AquaAutoOnOff Program[MAX_AUTO_PROG];
 };
 
+struct AquariumTemp {
+  float         f_Current;
+  float         f_Max;
+  float         f_Min;
+};
+
 struct AquariumData {
   AquariumTech    Lamp;
   AquariumTech    Aerator;
   AquariumTech    Heater;
   AquariumTech    Filter;
-  float           f_Temperature;
+  AquariumTemp    Temperature;
   bool            b_RTCavailable;
 };
 
