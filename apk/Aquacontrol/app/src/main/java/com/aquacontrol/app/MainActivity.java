@@ -10,8 +10,10 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.method.ScrollingMovementMethod;
 import android.util.TypedValue;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -159,6 +161,36 @@ public class MainActivity extends AppCompatActivity {
                     String msg = Constants.MQTT_OFF;
                     mqttPublishTo(topic,msg);
                 }
+            }
+        });
+
+        final EditText etTempMax = (EditText) findViewById(R.id.tempMax);
+        etTempMax.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                boolean handled = false;
+                if (i == EditorInfo.IME_ACTION_SEND) {
+                    String topic = Constants.MQTT_AQU_TEMP_TMAX;
+                    String msg = etTempMax.getText().toString();
+                    mqttPublishTo(topic, msg);
+                    handled = true;
+                }
+                return handled;
+            }
+        });
+
+        final EditText etTempMin = (EditText) findViewById((R.id.tempMin));
+        etTempMin.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                boolean handled = false;
+                if (i == EditorInfo.IME_ACTION_SEND) {
+                    String topic = Constants.MQTT_AQU_TEMP_TMIN;
+                    String msg = etTempMin.getText().toString();
+                    mqttPublishTo(topic, msg);
+                    handled = true;
+                }
+                return handled;
             }
         });
 

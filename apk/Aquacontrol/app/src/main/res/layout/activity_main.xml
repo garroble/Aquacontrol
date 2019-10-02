@@ -147,6 +147,7 @@
                 android:maxLines="1"
                 android:textColor="@color/colorSecText"
                 android:inputType="number"
+                android:imeOptions="actionSend"
                 android:importantForAutofill="no"
                 android:hint="@string/tempmaxhint" />
         </TableRow>
@@ -170,6 +171,7 @@
                 android:maxLines="1"
                 android:textColor="@color/colorSecText"
                 android:inputType="number"
+                android:imeOptions="actionSend"
                 android:importantForAutofill="no"
                 android:hint="@string/tempminhint" />
         </TableRow>
