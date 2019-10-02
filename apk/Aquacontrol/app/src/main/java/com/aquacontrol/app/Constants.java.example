@@ -20,6 +20,9 @@ public class Constants {
     public static final String MQTT_HEAT_CTL        = "aquarium/heater/control";
     public static final String MQTT_FILT_CTL        = "aquarium/filter/control";
 
+    public static final String MQTT_AQU_TEMP_TMAX   = "aquarium/temperature/tempmax";
+    public static final String MQTT_AQU_TEMP_TMIN   = "aquarium/temperature/tempmin";
+
     public static final String MQTT_LAMP_CTL       = "aquarium/lamp/control";
     public static final String MQTT_LAMP_CTL_AUTO  = "aquarium/lamp/automode";
     public static final String MQTT_LAMP_CTL_A0ACT = "aquarium/lamp/prog0active";
