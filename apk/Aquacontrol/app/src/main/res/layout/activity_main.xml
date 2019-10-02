@@ -13,7 +13,6 @@
         android:layout_height="0px"
         android:focusable="true"
         android:focusableInTouchMode="true">
-
         <requestFocus />
     </LinearLayout>
 
@@ -27,11 +26,11 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
-
         <TextView
             android:layout_width="192dp"
             android:layout_height="match_parent"
-            android:layout_marginLeft="64dp"
+            android:layout_marginLeft="@dimen/leftSpace"
+            android:layout_marginStart="@dimen/leftSpace"
             android:gravity="center_vertical"
             android:text="@string/temp"
             android:textColor="@color/colorMainText"
@@ -42,6 +41,7 @@
             android:layout_width="128dp"
             android:layout_height="match_parent"
             android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
             android:gravity="center_vertical"
             android:textColor="@color/colorSecText"
             android:textStyle="bold" />
@@ -62,7 +62,8 @@
         <TextView
             android:layout_width="192dp"
             android:layout_height="match_parent"
-            android:layout_marginLeft="64dp"
+            android:layout_marginLeft="@dimen/leftSpace"
+            android:layout_marginStart="@dimen/leftSpace"
             android:gravity="center_vertical"
             android:text="@string/filter"
             android:textColor="@color/colorMainText"
@@ -88,7 +89,8 @@
         <TextView
             android:layout_width="192dp"
             android:layout_height="match_parent"
-            android:layout_marginLeft="64dp"
+            android:layout_marginLeft="@dimen/leftSpace"
+            android:layout_marginStart="@dimen/leftSpace"
             android:gravity="center_vertical"
             android:text="@string/aerator"
             android:textColor="@color/colorMainText"
@@ -114,7 +116,8 @@
             <TextView
                 android:layout_width="192dp"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="64dp"
+                android:layout_marginLeft="@dimen/leftSpace"
+                android:layout_marginStart="@dimen/leftSpace"
                 android:gravity="center_vertical"
                 android:text="@string/heater"
                 android:textColor="@color/colorMainText"
@@ -128,7 +131,8 @@
             <TextView
                 android:layout_width="192dp"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="64dp"
+                android:layout_marginLeft="@dimen/leftSpace"
+                android:layout_marginStart="@dimen/leftSpace"
                 android:gravity="center_vertical"
                 android:text="@string/tempmax"
                 android:textColor="@color/colorMainText"
@@ -138,26 +142,20 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="24dp"
+                android:layout_marginStart="24dp"
                 android:gravity="center_vertical"
+                android:maxLines="1"
                 android:textColor="@color/colorSecText"
-                android:hint="30" />
-        </TableRow>
-        <TableRow>
-            <SeekBar
-                android:layout_width="192dp"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="64dp"
-                android:max="30"
-                android:min="20"
-                android:progress="1"
-                android:gravity="center_vertical"
-                android:textStyle="bold" />
+                android:inputType="number"
+                android:importantForAutofill="no"
+                android:hint="@string/tempmaxhint" />
         </TableRow>
         <TableRow>
             <TextView
                 android:layout_width="192dp"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="64dp"
+                android:layout_marginStart="@dimen/leftSpace"
                 android:gravity="center_vertical"
                 android:text="@string/tempmin"
                 android:textColor="@color/colorMainText"
@@ -167,36 +165,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="24dp"
+                android:layout_marginStart="24dp"
                 android:gravity="center_vertical"
+                android:maxLines="1"
                 android:textColor="@color/colorSecText"
-                android:hint="20" />
+                android:inputType="number"
+                android:importantForAutofill="no"
+                android:hint="@string/tempminhint" />
         </TableRow>
     </TableLayout>
-<!--    <LinearLayout
-        android:id="@+id/linearHeater"
-        android:layout_width="392dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/rounded_corners"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearFilter">
-
-        <TextView
-            android:layout_width="192dp"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="64dp"
-            android:gravity="center_vertical"
-            android:text="@string/heater"
-            android:textColor="@color/colorMainText"
-            android:textStyle="bold" />
-
-        <Switch
-            android:id="@+id/heaterSW"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-    </LinearLayout>-->
 
     <TableLayout
         android:id="@+id/tableLamp"
@@ -212,7 +189,8 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"
-                android:layout_marginLeft="64dp"
+                android:layout_marginLeft="@dimen/leftSpace"
+                android:layout_marginStart="@dimen/leftSpace"
                 android:gravity="center_vertical"
                 android:text="@string/lamp"
                 android:textColor="@color/colorMainText"
@@ -228,7 +206,8 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"
-                android:layout_marginLeft="64dp"
+                android:layout_marginLeft="@dimen/leftSpace"
+                android:layout_marginStart="@dimen/leftSpace"
                 android:gravity="center_vertical"
                 android:text="@string/auto_mode"
                 android:textColor="@color/colorMainText"
@@ -243,7 +222,8 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"
-                android:layout_marginLeft="64dp"
+                android:layout_marginLeft="@dimen/leftSpace"
+                android:layout_marginStart="@dimen/leftSpace"
                 android:gravity="center_vertical"
                 android:text="@string/prog1"
                 android:textColor="@color/colorMainText"
@@ -275,7 +255,8 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"
-                android:layout_marginLeft="64dp"
+                android:layout_marginLeft="@dimen/leftSpace"
+                android:layout_marginStart="@dimen/leftSpace"
                 android:gravity="center_vertical"
                 android:text="@string/prog2"
                 android:textColor="@color/colorMainText"
@@ -307,7 +288,8 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"
-                android:layout_marginLeft="64dp"
+                android:layout_marginLeft="@dimen/leftSpace"
+                android:layout_marginStart="@dimen/leftSpace"
                 android:gravity="center_vertical"
                 android:text="@string/prog3"
                 android:textColor="@color/colorMainText"
@@ -351,7 +333,8 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="20dp"
-                android:layout_marginLeft="64dp"
+                android:layout_marginLeft="@dimen/leftSpace"
+                android:layout_marginStart="@dimen/leftSpace"
                 android:gravity="center_vertical"
                 android:text="@string/version"
                 android:textColor="@color/colorMainText"
@@ -370,7 +353,8 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="20dp"
-                android:layout_marginLeft="64dp"
+                android:layout_marginLeft="@dimen/leftSpace"
+                android:layout_marginStart="@dimen/leftSpace"
                 android:gravity="center_vertical"
                 android:text="@string/ip"
                 android:textColor="@color/colorMainText"
@@ -389,7 +373,8 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="20dp"
-                android:layout_marginLeft="64dp"
+                android:layout_marginLeft="@dimen/leftSpace"
+                android:layout_marginStart="@dimen/leftSpace"
                 android:gravity="center_vertical"
                 android:text="@string/active"
                 android:textColor="@color/colorMainText"
@@ -408,7 +393,8 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="20dp"
-                android:layout_marginLeft="64dp"
+                android:layout_marginLeft="@dimen/leftSpace"
+                android:layout_marginStart="@dimen/leftSpace"
                 android:gravity="center_vertical"
                 android:text="@string/lastmsg"
                 android:textColor="@color/colorMainText"

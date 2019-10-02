@@ -15,5 +15,6 @@
     <string name="ip">IP</string>
     <string name="active">Active since:</string>
     <string name="lastmsg">Last message: </string>
-
+    <string name="tempmaxhint">30</string>
+    <string name="tempminhint">20</string>
 </resources>
