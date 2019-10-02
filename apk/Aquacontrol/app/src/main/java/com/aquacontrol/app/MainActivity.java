@@ -104,7 +104,9 @@ public class MainActivity extends AppCompatActivity {
         //Create listener for MQTT messages.
         mqttCallback();
 
-        //Attend switches changes
+        /********************/
+        /*      FILTER      */
+        /********************/
         Switch swFilter = (Switch) findViewById(R.id.filterSW);
         swFilter.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -121,21 +123,9 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        Switch swHeater = (Switch) findViewById(R.id.heaterSW);
-        swHeater.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                String topic = Constants.MQTT_HEAT_CTL;
-                if (b) {
-                    String msg = Constants.MQTT_ON;
-                    mqttPublishTo(topic,msg);
-                }
-                else {
-                    String msg = Constants.MQTT_OFF;
-                    mqttPublishTo(topic,msg);
-                }
-            }
-        });
+        /********************/
+        /*      AERATOR     */
+        /********************/
 
         Switch swAerator = (Switch) findViewById(R.id.aeratorSW);
         swAerator.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -152,6 +142,29 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
+        /********************/
+        /*      HEATER      */
+        /********************/
+        Switch swHeater = (Switch) findViewById(R.id.heaterSW);
+        swHeater.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                String topic = Constants.MQTT_HEAT_CTL;
+                if (b) {
+                    String msg = Constants.MQTT_ON;
+                    mqttPublishTo(topic,msg);
+                }
+                else {
+                    String msg = Constants.MQTT_OFF;
+                    mqttPublishTo(topic,msg);
+                }
+            }
+        });
+
+        /********************/
+        /*       LAMP       */
+        /********************/
 
         Switch swLamp = (Switch) findViewById(R.id.lampSW);
         swLamp.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -407,7 +420,12 @@ public class MainActivity extends AppCompatActivity {
                 mqttSubscriteTo(Constants.MQTT_AQU_RST);
                 mqttSubscriteTo(Constants.MQTT_AQU_IP);
                 mqttSubscriteTo(Constants.MQTT_AQU_TIME);
-                mqttSubscriteTo(Constants.MQTT_AQU_LAMP_STA);
+                mqttSubscriteTo(Constants.MQTT_AQU_TEMP);
+                mqttSubscriteTo(Constants.MQTT_AQU_FILT_STA);
+                mqttSubscriteTo(Constants.MQTT_AQU_AERA_STA);
+                mqttSubscriteTo(Constants.MQTT_AQU_HEAT_STA);
+                mqttSubscriteTo(Constants.MQTT_AQU_TEMP_TMAX);
+                mqttSubscriteTo(Constants.MQTT_AQU_TEMP_TMIN);
                 mqttSubscriteTo(Constants.MQTT_LAMP_CTL_AUTO);
                 mqttSubscriteTo(Constants.MQTT_LAMP_CTL_A0ACT);
                 mqttSubscriteTo(Constants.MQTT_LAMP_CTL_A0ON);
@@ -418,10 +436,6 @@ public class MainActivity extends AppCompatActivity {
                 mqttSubscriteTo(Constants.MQTT_LAMP_CTL_A2ACT);
                 mqttSubscriteTo(Constants.MQTT_LAMP_CTL_A2ON);
                 mqttSubscriteTo(Constants.MQTT_LAMP_CTL_A2OFF);
-                mqttSubscriteTo(Constants.MQTT_AQU_AERA_STA);
-                mqttSubscriteTo(Constants.MQTT_AQU_HEAT_STA);
-                mqttSubscriteTo(Constants.MQTT_AQU_FILT_STA);
-                mqttSubscriteTo(Constants.MQTT_AQU_TEMP);
             }
         }, 1000);
 
@@ -513,17 +527,43 @@ public class MainActivity extends AppCompatActivity {
                     TextView tvTemperature = (TextView) findViewById(R.id.temperature);
                     tvTemperature.setText(message.toString());
                 }
+                else if(topic.equals(Constants.MQTT_AQU_VERS)) {
+                    TextView tvVersion = (TextView) findViewById(R.id.Version);
+                    tvVersion.setText(message.toString());
+                }
+                else if(topic.equals(Constants.MQTT_AQU_IP)) {
+                    TextView tvIP = (TextView) findViewById(R.id.IP);
+                    tvIP.setText(message.toString());
+                }
+                else if(topic.equals(Constants.MQTT_AQU_RST)) {
+                    TextView tvActive = (TextView) findViewById(R.id.timeActive);
+                    String   time = getDate(message.toString());
+                    tvActive.setText(time);
+                }
+                else if(topic.equals(Constants.MQTT_AQU_TIME)) {
+                    TextView tvLast = (TextView) findViewById(R.id.lastMsg);
+                    String   time = getDate(message.toString());
+                    tvLast.setText(time);
+                }
                 else if(topic.equals(Constants.MQTT_AQU_FILT_STA)) {
                     Switch swFilter = (Switch) findViewById(R.id.filterSW);
                     aquaCtl(swFilter, message);
+                }
+                else if(topic.equals(Constants.MQTT_AQU_AERA_STA)) {
+                    Switch swAerator = (Switch) findViewById(R.id.aeratorSW);
+                    aquaCtl(swAerator, message);
                 }
                 else if(topic.equals(Constants.MQTT_AQU_HEAT_STA)) {
                     Switch swHeater = (Switch) findViewById(R.id.heaterSW);
                     aquaCtl(swHeater, message);
                 }
-                else if(topic.equals(Constants.MQTT_AQU_AERA_STA)) {
-                    Switch swAerator = (Switch) findViewById(R.id.aeratorSW);
-                    aquaCtl(swAerator, message);
+                else if(topic.equals(Constants.MQTT_AQU_TEMP_TMAX)) {
+                    EditText etTempMax = (EditText) findViewById(R.id.tempMax);
+                    etTempMax.setText(message.toString());
+                }
+                else if(topic.equals(Constants.MQTT_AQU_TEMP_TMIN)) {
+                    EditText etTempMin = (EditText) findViewById(R.id.tempMin);
+                    etTempMin.setText(message.toString());
                 }
                 else if(topic.equals(Constants.MQTT_AQU_LAMP_STA)) {
                     Switch swLamp = (Switch) findViewById(R.id.lampSW);
@@ -568,32 +608,6 @@ public class MainActivity extends AppCompatActivity {
                 else if(topic.equals(Constants.MQTT_LAMP_CTL_A2OFF)) {
                     EditText etP3Off = (EditText) findViewById(R.id.lampPR3OffTime);
                     etP3Off.setText(message.toString());
-                }
-                else if(topic.equals(Constants.MQTT_AQU_VERS)) {
-                    TextView tvVersion = (TextView) findViewById(R.id.Version);
-                    tvVersion.setText(message.toString());
-                }
-                else if(topic.equals(Constants.MQTT_AQU_IP)) {
-                    TextView tvIP = (TextView) findViewById(R.id.IP);
-                    tvIP.setText(message.toString());
-                }
-                else if(topic.equals(Constants.MQTT_AQU_RST)) {
-                    TextView tvActive = (TextView) findViewById(R.id.timeActive);
-                    String   time = getDate(message.toString());
-                    tvActive.setText(time);
-                }
-                else if(topic.equals(Constants.MQTT_AQU_TIME)) {
-                    TextView tvLast = (TextView) findViewById(R.id.lastMsg);
-                    String   time = getDate(message.toString());
-                    tvLast.setText(time);
-                }
-                else if(topic.equals(Constants.MQTT_AQU_TEMP_TMAX)) {
-                    EditText etTempMax = (EditText) findViewById(R.id.tempMax);
-                    etTempMax.setText(message.toString());
-                }
-                else if(topic.equals(Constants.MQTT_AQU_TEMP_TMIN)) {
-                    EditText etTempMin = (EditText) findViewById(R.id.tempMin);
-                    etTempMin.setText(message.toString());
                 }
                 else {
 
