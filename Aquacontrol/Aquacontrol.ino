@@ -353,7 +353,7 @@ void pubResetData() {
   Serial.print(timeString.substring(0,i_datetime));
   Serial.print(" | TIME (GMT+1): ");
   Serial.println(timeString.substring(i_datetime+1, timeString.length()-1));
-  mqtt_client.publish(MQTT_AQU_RST, timeString.c_str());
+  mqtt_client.publish(MQTT_AQU_RST, timeString.c_str(), true);
   if (Aquarium.Lamp.b_Status)    { mqtt_client.publish(MQTT_AQU_LAMP_STA, "on", true); }
   else                           { mqtt_client.publish(MQTT_AQU_LAMP_STA, "off", true); }
   if (Aquarium.Aerator.b_Status) { mqtt_client.publish(MQTT_AQU_AERA_STA, "on", true); }
@@ -461,6 +461,7 @@ void heatLoopCtl() {
   if (Aquarium.Temperature.f_Current > Aquarium.Temperature.f_Max) {
     Aquarium.Heater.b_Control = false;
     heaterSet(false);
+    Serial.println(" ---> ALARM: Over temperature");
   }
   else if( (Aquarium.Temperature.f_Current < Aquarium.Temperature.f_Max) &&
            (Aquarium.Temperature.f_Current > Aquarium.Temperature.f_Min) ) {
@@ -469,6 +470,7 @@ void heatLoopCtl() {
   } else {
     Aquarium.Heater.b_Control = false;
     heaterSet(false);
+    Serial.println(" ---> ALARM: Under temperature");
   }
 }
 
