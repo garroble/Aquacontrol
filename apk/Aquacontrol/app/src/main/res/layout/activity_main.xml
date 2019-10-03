@@ -8,6 +8,17 @@
     android:background="@color/colorBackground"
     tools:context=".MainActivity">
 
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/my_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/colorPrimary"
+        android:elevation="4dp"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:subtitleTextColor="@color/colorSecText"
+        app:titleTextColor="@color/colorMainText" />
+
     <LinearLayout
         android:layout_width="0px"
         android:layout_height="0px"
@@ -20,12 +31,12 @@
         android:id="@+id/linearTemp"
         android:layout_width="392dp"
         android:layout_height="40dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="8dp"
         android:background="@drawable/rounded_corners"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@+id/my_toolbar">
         <TextView
             android:layout_width="192dp"
             android:layout_height="match_parent"

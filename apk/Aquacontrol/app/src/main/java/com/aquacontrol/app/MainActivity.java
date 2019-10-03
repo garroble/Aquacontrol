@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.method.ScrollingMovementMethod;
 import android.util.TypedValue;
 import android.view.KeyEvent;
@@ -36,7 +37,6 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 
 import java.io.UnsupportedEncodingException;
 
-
 public class MainActivity extends AppCompatActivity {
 
     private MqttAndroidClient client;
@@ -44,31 +44,6 @@ public class MainActivity extends AppCompatActivity {
     private PahoMqttClient pahoMqttClient;
     private String clientid = "";
     private Timer myTimer;
-    //Callback when bottom navigation item is selected
-/*    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
-            = new BottomNavigationView.OnNavigationItemSelectedListener() {
-
-        @Override
-        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-
-            BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.navigation);
-            BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
-
-            switch (item.getItemId()) {
-                case R.id.navigation_manual:
-
-                    return true;
-
-                case R.id.navigation_auto:
-
-                    return true;
-                case R.id.navigation_settings:
-                    System.exit(0);
-                    return true;
-            }
-            return false;
-        }
-    };*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +53,9 @@ public class MainActivity extends AppCompatActivity {
         //ActionBar actionBar = getSupportActionBar();                                            // Add Icon to title bar
         //actionBar.setDisplayShowHomeEnabled(true);
         //actionBar.setIcon(R.mipmap.ic_app_launcher);
+
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        setSupportActionBar(myToolbar);
 
         //Generate unique client id for MQTT broker connection
         Random r = new Random();
@@ -96,12 +74,6 @@ public class MainActivity extends AppCompatActivity {
                                                 username,
                                                 password
                                              );
-        //Register Bottom Navigation Callback
-/*
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);      // Set nav menu "Select" callback
-        BottomNavigationViewHelper.disableShiftMode(navigation);                                // Make all Text Visible
-*/
 
         //Create listener for MQTT messages.
         mqttCallback();
