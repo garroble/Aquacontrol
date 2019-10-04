@@ -10,6 +10,12 @@ And here on GitHub the repository includes:
 - Aquacontrol. ESP8266 firmware developed on [Arduino IDE](https://www.arduino.cc/en/main/software).
 - me. Case developed on [FreeCAD](https://www.freecadweb.org/).
 
+## Application
+The APK includes a Main Activity to control the Aquarium and a Settings activity con configure MQTT Broker.
+
+![APK Main](https://github.com/garroble/Aquacontrol/blob/master/docs/img/apk_main.png?raw=true)
+![APK Settings](https://github.com/garroble/Aquacontrol/blob/master/docs/img/apk_settings.png?raw=true)
+
 ## License
 This project is licensed under the GPL v3 license.
 
