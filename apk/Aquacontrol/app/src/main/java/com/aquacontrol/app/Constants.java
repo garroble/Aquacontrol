@@ -2,10 +2,11 @@ package com.aquacontrol.app;
 
 public class Constants {
 
-    public static final String MQTT_BROKER_URL = "tcp://farmer.cloudmqtt.com:17344";
-    public static final String MQTT_CLIENT_UN = "--------";
-    public static final String MQTT_CLIENT_PW = "--------";
-    public static final String CLIENT_ID = "app_startup_placeholder";
+    public static final String CLIENT_ID            = "app_startup_placeholder";
+    public static final String PREFERENCES          = "com.aquacontrol.app.PREFERENCES";
+    public static final String PREF_BROKER_URL      = "broker_url";
+    public static final String PREF_BROKER_USER     = "broker_user";
+    public static final String PREF_BROKER_PASS     = "broker_pass";
 
     public static final String MQTT_AQU_VERS        = "aquarium/version";
     public static final String MQTT_AQU_RST         = "aquarium/reset";

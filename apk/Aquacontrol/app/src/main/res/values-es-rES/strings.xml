@@ -16,4 +16,7 @@
     <string name="active">Activo desde:</string>
     <string name="tempmax">Temperatura Máxima:</string>
     <string name="tempmin">Temperatura Mínima:</string>
+    <string name="tempmaxhint">30</string>
+    <string name="tempminhint">20</string>
+    <string name="menu_settings">Configuración</string>
 </resources>

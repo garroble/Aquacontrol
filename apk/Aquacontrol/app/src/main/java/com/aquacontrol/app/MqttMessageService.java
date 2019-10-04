@@ -1,5 +1,6 @@
 package com.aquacontrol.app;
 
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 
 import android.app.NotificationManager;
@@ -33,8 +34,25 @@ public class MqttMessageService extends Service {
         super.onCreate();
         Log.d(TAG, "onCreate");
 
+        // MQTT settings
+        String urlBroker    = "";
+        String username     = "";
+        String password     = "";
+
+        // Load settings
+        final SharedPreferences sharedpreferences = getSharedPreferences(Constants.PREFERENCES, MODE_PRIVATE);
+        if (sharedpreferences.contains(Constants.PREF_BROKER_URL)) {
+            urlBroker = sharedpreferences.getString(Constants.PREF_BROKER_URL, "");
+        }
+        if (sharedpreferences.contains(Constants.PREF_BROKER_USER)) {
+            username = sharedpreferences.getString(Constants.PREF_BROKER_USER, "");
+        }
+        if (sharedpreferences.contains(Constants.PREF_BROKER_PASS)) {
+            password = sharedpreferences.getString(Constants.PREF_BROKER_PASS, "");
+        }
+
         pahoMqttClient = new PahoMqttClient();
-        mqttAndroidClient = pahoMqttClient.getMqttClient(getApplicationContext(), Constants.MQTT_BROKER_URL, Constants.CLIENT_ID, Constants.MQTT_CLIENT_UN,Constants.MQTT_CLIENT_PW);
+        mqttAndroidClient = pahoMqttClient.getMqttClient(getApplicationContext(),urlBroker, Constants.CLIENT_ID, username, password);
 
         mqttAndroidClient.setCallback(new MqttCallbackExtended() {
             @Override

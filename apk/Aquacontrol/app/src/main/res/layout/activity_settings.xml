@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorBackground"
+    tools:context=".Settings">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/my_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/colorPrimary"
+        android:elevation="4dp"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Dark"
+        app:subtitleTextColor="@color/colorSecText"
+        app:titleTextColor="@color/colorMainText" />
+
+    <TableLayout
+        android:id="@+id/tableHeater"
+        android:layout_width="392dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing"
+        android:gravity="center_vertical"
+        android:background="@drawable/rounded_corners"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/my_toolbar">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="@dimen/leftSpaceSettings"
+            android:layout_marginLeft="@dimen/leftSpaceSettings"
+            android:gravity="center_vertical"
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp"
+            android:text="MQTT Brokerk Settings"
+            android:textColor="@color/colorMainText"
+            android:textStyle="bold" />
+        <TableRow>
+            <TextView
+                android:layout_width="48dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/leftSpaceSettings"
+                android:layout_marginStart="@dimen/leftSpaceSettings"
+                android:gravity="center_vertical"
+                android:text="Broker"
+                android:textColor="@color/colorMainText"/>
+            <EditText
+                android:id="@+id/brokerURL"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="24dp"
+                android:layout_marginStart="24dp"
+                android:gravity="center_vertical"
+                android:maxLines="1"
+                android:textColor="@color/colorSecText"
+                android:inputType="text"
+                android:imeOptions="actionSend"
+                android:importantForAutofill="no"
+                android:hint="tcp://farmer.cloudmqtt.com:17344" />
+        </TableRow>
+        <TableRow>
+            <TextView
+                android:layout_width="48dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/leftSpaceSettings"
+                android:layout_marginStart="@dimen/leftSpaceSettings"
+                android:gravity="center_vertical"
+                android:text="User"
+                android:textColor="@color/colorMainText" />
+            <EditText
+                android:id="@+id/brokerUser"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="24dp"
+                android:layout_marginStart="24dp"
+                android:gravity="center_vertical"
+                android:maxLines="1"
+                android:textColor="@color/colorSecText"
+                android:inputType="text"
+                android:imeOptions="actionSend"
+                android:importantForAutofill="no"
+                android:hint="User" />
+        </TableRow>
+        <TableRow>
+            <TextView
+                android:layout_width="48dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/leftSpaceSettings"
+                android:layout_marginStart="@dimen/leftSpaceSettings"
+                android:gravity="center_vertical"
+                android:text="Pass"
+                android:textColor="@color/colorMainText" />
+            <EditText
+                android:id="@+id/brokerPass"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="24dp"
+                android:layout_marginStart="24dp"
+                android:gravity="center_vertical"
+                android:maxLines="1"
+                android:textColor="@color/colorSecText"
+                android:inputType="text"
+                android:imeOptions="actionSend"
+                android:importantForAutofill="no"
+                android:hint="Pass" />
+        </TableRow>
+    </TableLayout>
+
+</android.support.constraint.ConstraintLayout>

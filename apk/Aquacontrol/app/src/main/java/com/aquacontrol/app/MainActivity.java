@@ -2,6 +2,9 @@ package com.aquacontrol.app;
 
 import android.app.Notification;
 import android.app.TimePickerDialog;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -64,10 +67,22 @@ public class MainActivity extends AppCompatActivity {
         int i1 = r.nextInt(5000 - 1) + 1;
         clientid = "mqtt" + i1;
 
-        //Get Edit field values from layout GUI
-        String urlBroker    = Constants.MQTT_BROKER_URL;    //etBroker.getText().toString().trim();
-        String username     = Constants.MQTT_CLIENT_UN;     //etUName.getText().toString().trim();
-        String password     = Constants.MQTT_CLIENT_PW;     //etPWord.getText().toString().trim();
+        // MQTT settings
+        String urlBroker    = "";
+        String username     = "";
+        String password     = "";
+
+        // Load settings
+        final SharedPreferences sharedpreferences = getSharedPreferences(Constants.PREFERENCES, MODE_PRIVATE);
+        if (sharedpreferences.contains(Constants.PREF_BROKER_URL)) {
+            urlBroker = sharedpreferences.getString(Constants.PREF_BROKER_URL, "");
+        }
+        if (sharedpreferences.contains(Constants.PREF_BROKER_USER)) {
+            username = sharedpreferences.getString(Constants.PREF_BROKER_USER, "");
+        }
+        if (sharedpreferences.contains(Constants.PREF_BROKER_PASS)) {
+            password = sharedpreferences.getString(Constants.PREF_BROKER_PASS, "");
+        }
 
         pahoMqttClient = new PahoMqttClient();
         client = pahoMqttClient.getMqttClient(  getApplicationContext(),                        // Connect to MQTT Broker
@@ -468,6 +483,8 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {
             case R.id.menuSetting:
+                Intent intent = new Intent(this, Settings.class);
+                startActivity(intent);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -490,9 +507,20 @@ public class MainActivity extends AppCompatActivity {
             //This method runs in the same thread as the UI.
 
             //Check MQTT Connection Status
-            String urlBroker = Constants.MQTT_BROKER_URL;
-            String username  = Constants.MQTT_CLIENT_UN;
-            String password  = Constants.MQTT_CLIENT_PW;
+            String urlBroker = "";
+            String username  = "";
+            String password  = "";
+            // Load settings
+            SharedPreferences sharedpreferences = getSharedPreferences(Constants.PREFERENCES, MODE_PRIVATE);
+            if (sharedpreferences.contains(Constants.PREF_BROKER_URL)) {
+                urlBroker = sharedpreferences.getString(Constants.PREF_BROKER_URL, "");
+            }
+            if (sharedpreferences.contains(Constants.PREF_BROKER_USER)) {
+                username = sharedpreferences.getString(Constants.PREF_BROKER_USER, "");
+            }
+            if (sharedpreferences.contains(Constants.PREF_BROKER_PASS)) {
+                password = sharedpreferences.getString(Constants.PREF_BROKER_PASS, "");
+            }
             ActionBar actionBar = getSupportActionBar();
 
             //Generate unique client id for MQTT broker connection

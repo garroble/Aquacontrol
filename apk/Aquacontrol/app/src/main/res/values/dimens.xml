@@ -5,4 +5,5 @@
     <dimen name="spacing">16dp</dimen>
     <dimen name="textsize">36sp</dimen>
     <dimen name="leftSpace">64dp</dimen>
+    <dimen name="leftSpaceSettings">16dp</dimen>
 </resources>
