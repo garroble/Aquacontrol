@@ -25,6 +25,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.EditText;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -162,6 +163,7 @@ public class MainActivity extends AppCompatActivity {
                     String topic = Constants.MQTT_AQU_TEMP_TMAX;
                     String msg = etTempMax.getText().toString();
                     mqttPublishTo(topic, msg);
+                    Toast.makeText(MainActivity.this, "Maximum temperature set", Toast.LENGTH_SHORT).show();
                     handled = true;
                 }
                 return handled;
@@ -177,6 +179,7 @@ public class MainActivity extends AppCompatActivity {
                     String topic = Constants.MQTT_AQU_TEMP_TMIN;
                     String msg = etTempMin.getText().toString();
                     mqttPublishTo(topic, msg);
+                    Toast.makeText(MainActivity.this, "Minimum temperature set", Toast.LENGTH_SHORT).show();
                     handled = true;
                 }
                 return handled;
