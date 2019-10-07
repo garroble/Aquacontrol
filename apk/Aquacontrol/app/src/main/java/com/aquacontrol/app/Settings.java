@@ -10,6 +10,7 @@ import android.view.KeyEvent;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import static android.app.PendingIntent.getActivity;
 
@@ -53,6 +54,7 @@ public class Settings extends AppCompatActivity {
                     SharedPreferences.Editor editor = sharedpreferences.edit();
                     editor.putString(Constants.PREF_BROKER_URL, etBrokerURL.getText().toString());
                     editor.commit();
+                    Toast.makeText(Settings.this, "MQTT Broker saved", Toast.LENGTH_SHORT).show();
                     handled = true;
                 }
                 return handled;
@@ -67,6 +69,7 @@ public class Settings extends AppCompatActivity {
                     SharedPreferences.Editor editor = sharedpreferences.edit();
                     editor.putString(Constants.PREF_BROKER_USER, etBrokerUSER.getText().toString());
                     editor.commit();
+                    Toast.makeText(Settings.this, "MQTT User saved", Toast.LENGTH_SHORT).show();
                     handled = true;
                 }
                 return handled;
@@ -81,6 +84,7 @@ public class Settings extends AppCompatActivity {
                     SharedPreferences.Editor editor = sharedpreferences.edit();
                     editor.putString(Constants.PREF_BROKER_PASS, etBrokerPASS.getText().toString());
                     editor.commit();
+                    Toast.makeText(Settings.this, "MQTT Password saved", Toast.LENGTH_SHORT).show();
                     handled = true;
                 }
                 return handled;
