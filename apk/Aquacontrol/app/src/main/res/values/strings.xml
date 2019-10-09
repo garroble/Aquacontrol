@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Aquacontrol</string>
     <string name="menu_settings">Settings</string>
+    <string name="menu_broker">MQTT Broker Settings</string>
     <string name="temp">Temperature (ºC)</string>
     <string name="filter">Filter</string>
     <string name="heater">Heater</string>

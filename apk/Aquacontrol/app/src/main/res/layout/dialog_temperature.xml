@@ -10,9 +10,10 @@
         android:id="@+id/dialog_info"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="10dp"
+        android:gravity="center"
+        android:padding="24dp"
         android:text="Temp"
-        android:gravity="center"/>
+        android:textSize="24sp" />
 
     <SeekBar
         android:id="@+id/seek_temp"

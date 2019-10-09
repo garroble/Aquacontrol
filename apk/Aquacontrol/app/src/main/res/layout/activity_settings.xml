@@ -37,7 +37,7 @@
             android:gravity="center_vertical"
             android:paddingTop="16dp"
             android:paddingBottom="16dp"
-            android:text="MQTT Brokerk Settings"
+            android:text="@string/menu_broker"
             android:textColor="@color/colorMainText"
             android:textStyle="bold" />
         <TableRow>
@@ -104,7 +104,7 @@
                 android:gravity="center_vertical"
                 android:maxLines="1"
                 android:textColor="@color/colorSecText"
-                android:inputType="text"
+                android:inputType="textPassword"
                 android:imeOptions="actionSend"
                 android:importantForAutofill="no"
                 android:hint="Pass" />
