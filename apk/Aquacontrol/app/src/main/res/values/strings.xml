@@ -18,4 +18,6 @@
     <string name="lastmsg">Last message: </string>
     <string name="tempmaxhint">30</string>
     <string name="tempminhint">20</string>
+    <string name="temppos">TMax</string>
+    <string name="select_temp">Please selec temperature:</string>
 </resources>

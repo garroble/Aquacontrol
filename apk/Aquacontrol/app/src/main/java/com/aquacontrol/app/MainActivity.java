@@ -1,8 +1,10 @@
 package com.aquacontrol.app;
 
+import android.app.AlertDialog;
 import android.app.Notification;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -15,12 +17,15 @@ import android.support.v7.widget.Toolbar;
 import android.text.method.ScrollingMovementMethod;
 import android.util.TypedValue;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.CompoundButton;
+import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.EditText;
@@ -155,35 +160,21 @@ public class MainActivity extends AppCompatActivity {
         });
 
         final EditText etTempMax = (EditText) findViewById(R.id.tempMax);
-        etTempMax.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        etTempMax.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-                boolean handled = false;
-                if (i == EditorInfo.IME_ACTION_SEND) {
-                    String topic = Constants.MQTT_AQU_TEMP_TMAX;
-                    String msg = etTempMax.getText().toString();
-                    mqttPublishTo(topic, msg);
-                    Toast.makeText(MainActivity.this, "Maximum temperature set", Toast.LENGTH_SHORT).show();
-                    handled = true;
-                }
-                return handled;
+            public void onClick (View view) {
+                ShowDialog(etTempMax, Constants.MQTT_AQU_TEMP_TMAX);
             }
+
         });
 
         final EditText etTempMin = (EditText) findViewById((R.id.tempMin));
-        etTempMin.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        etTempMin.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-                boolean handled = false;
-                if (i == EditorInfo.IME_ACTION_SEND) {
-                    String topic = Constants.MQTT_AQU_TEMP_TMIN;
-                    String msg = etTempMin.getText().toString();
-                    mqttPublishTo(topic, msg);
-                    Toast.makeText(MainActivity.this, "Minimum temperature set", Toast.LENGTH_SHORT).show();
-                    handled = true;
-                }
-                return handled;
+            public void onClick (View view) {
+                ShowDialog(etTempMin, Constants.MQTT_AQU_TEMP_TMIN);
             }
+
         });
 
         /********************/
@@ -260,21 +251,8 @@ public class MainActivity extends AppCompatActivity {
         lampP1OnTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick (View view) {
-                Calendar calendar = Calendar.getInstance();
-                int currentHour = calendar.get(Calendar.HOUR_OF_DAY);
-                int currentMinute = calendar.get(Calendar.MINUTE);
-                TimePickerDialog timePickerDialog = new TimePickerDialog(MainActivity.this, new TimePickerDialog.OnTimeSetListener() {
-                    @Override
-                    public void onTimeSet(TimePicker timePicker, int hourOfDay, int minutes) {
-                        String topic = Constants.MQTT_LAMP_CTL_A0ON;
-                        String s_time = "0:00";
-                        s_time = String.format("%02d:%02d", hourOfDay, minutes);
-                        lampP1OnTime.setText(s_time);
-                        mqttPublishTo(topic,s_time);
-                    }
-                }, currentHour, currentMinute, true);
-                timePickerDialog.setTitle("Select ON Time");
-                timePickerDialog.show();
+                String topic = Constants.MQTT_LAMP_CTL_A0ON;
+                showTimePicker(topic, lampP1OnTime);
             }
 
         });
@@ -283,21 +261,8 @@ public class MainActivity extends AppCompatActivity {
         lampP1OffTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick (View view) {
-                Calendar calendar = Calendar.getInstance();
-                int currentHour = calendar.get(Calendar.HOUR_OF_DAY);
-                int currentMinute = calendar.get(Calendar.MINUTE);
-                TimePickerDialog timePickerDialog = new TimePickerDialog(MainActivity.this, new TimePickerDialog.OnTimeSetListener() {
-                    @Override
-                    public void onTimeSet(TimePicker timePicker, int hourOfDay, int minutes) {
-                        String topic = Constants.MQTT_LAMP_CTL_A0OFF;
-                        String s_time = "0:00";
-                        s_time = String.format("%02d:%02d", hourOfDay, minutes);
-                        lampP1OffTime.setText(s_time);
-                        mqttPublishTo(topic,s_time);
-                    }
-                }, currentHour, currentMinute, true);
-                timePickerDialog.setTitle("Select OFF Time");
-                timePickerDialog.show();
+                String topic = Constants.MQTT_LAMP_CTL_A0OFF;
+                showTimePicker(topic, lampP1OffTime);
             }
         });
 
@@ -327,21 +292,8 @@ public class MainActivity extends AppCompatActivity {
         lampP2OnTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick (View view) {
-                Calendar calendar = Calendar.getInstance();
-                int currentHour = calendar.get(Calendar.HOUR_OF_DAY);
-                int currentMinute = calendar.get(Calendar.MINUTE);
-                TimePickerDialog timePickerDialog = new TimePickerDialog(MainActivity.this, new TimePickerDialog.OnTimeSetListener() {
-                    @Override
-                    public void onTimeSet(TimePicker timePicker, int hourOfDay, int minutes) {
-                        String topic = Constants.MQTT_LAMP_CTL_A1ON;
-                        String s_time = "0:00";
-                        s_time = String.format("%02d:%02d", hourOfDay, minutes);
-                        lampP2OnTime.setText(s_time);
-                        mqttPublishTo(topic,s_time);
-                    }
-                }, currentHour, currentMinute, true);
-                timePickerDialog.setTitle("Select ON Time");
-                timePickerDialog.show();
+                String topic = Constants.MQTT_LAMP_CTL_A1ON;
+                showTimePicker(topic, lampP2OnTime);
             }
 
         });
@@ -350,21 +302,8 @@ public class MainActivity extends AppCompatActivity {
         lampP2OffTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick (View view) {
-                Calendar calendar = Calendar.getInstance();
-                int currentHour = calendar.get(Calendar.HOUR_OF_DAY);
-                int currentMinute = calendar.get(Calendar.MINUTE);
-                TimePickerDialog timePickerDialog = new TimePickerDialog(MainActivity.this, new TimePickerDialog.OnTimeSetListener() {
-                    @Override
-                    public void onTimeSet(TimePicker timePicker, int hourOfDay, int minutes) {
-                        String topic = Constants.MQTT_LAMP_CTL_A1OFF;
-                        String s_time = "0:00";
-                        s_time = String.format("%02d:%02d", hourOfDay, minutes);
-                        lampP2OffTime.setText(s_time);
-                        mqttPublishTo(topic,s_time);
-                    }
-                }, currentHour, currentMinute, true);
-                timePickerDialog.setTitle("Select OFF Time");
-                timePickerDialog.show();
+                String topic = Constants.MQTT_LAMP_CTL_A1OFF;
+                showTimePicker(topic, lampP2OffTime);
             }
         });
 
@@ -394,21 +333,8 @@ public class MainActivity extends AppCompatActivity {
         lampP3OnTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick (View view) {
-                Calendar calendar = Calendar.getInstance();
-                int currentHour = calendar.get(Calendar.HOUR_OF_DAY);
-                int currentMinute = calendar.get(Calendar.MINUTE);
-                TimePickerDialog timePickerDialog = new TimePickerDialog(MainActivity.this, new TimePickerDialog.OnTimeSetListener() {
-                    @Override
-                    public void onTimeSet(TimePicker timePicker, int hourOfDay, int minutes) {
-                        String topic = Constants.MQTT_LAMP_CTL_A2ON;
-                        String s_time = "0:00";
-                        s_time = String.format("%02d:%02d", hourOfDay, minutes);
-                        lampP3OnTime.setText(s_time);
-                        mqttPublishTo(topic,s_time);
-                    }
-                }, currentHour, currentMinute, true);
-                timePickerDialog.setTitle("Select ON Time");
-                timePickerDialog.show();
+                String topic = Constants.MQTT_LAMP_CTL_A2ON;
+                showTimePicker(topic, lampP3OnTime);
             }
 
         });
@@ -417,21 +343,8 @@ public class MainActivity extends AppCompatActivity {
         lampP3OffTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick (View view) {
-                Calendar calendar = Calendar.getInstance();
-                int currentHour = calendar.get(Calendar.HOUR_OF_DAY);
-                int currentMinute = calendar.get(Calendar.MINUTE);
-                TimePickerDialog timePickerDialog = new TimePickerDialog(MainActivity.this, new TimePickerDialog.OnTimeSetListener() {
-                    @Override
-                    public void onTimeSet(TimePicker timePicker, int hourOfDay, int minutes) {
-                        String topic = Constants.MQTT_LAMP_CTL_A2OFF;
-                        String s_time = "0:00";
-                        s_time = String.format("%02d:%02d", hourOfDay, minutes);
-                        lampP3OffTime.setText(s_time);
-                        mqttPublishTo(topic,s_time);
-                    }
-                }, currentHour, currentMinute, true);
-                timePickerDialog.setTitle("Select OFF Time");
-                timePickerDialog.show();
+                String topic = Constants.MQTT_LAMP_CTL_A2OFF;
+                showTimePicker(topic, lampP3OffTime);
             }
         });
 
@@ -473,6 +386,76 @@ public class MainActivity extends AppCompatActivity {
             }
 
         }, 0, 1000);
+    }
+
+    private void showTimePicker(final String topic, final EditText et_Time) {
+        Calendar calendar = Calendar.getInstance();
+        int currentHour = calendar.get(Calendar.HOUR_OF_DAY);
+        int currentMinute = calendar.get(Calendar.MINUTE);
+        TimePickerDialog timePickerDialog = new TimePickerDialog(MainActivity.this, new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker timePicker, int hourOfDay, int minutes) {
+                String s_time = "0:00";
+                s_time = String.format("%02d:%02d", hourOfDay, minutes);
+                et_Time.setText(s_time);
+                mqttPublishTo(topic,s_time);
+            }
+        }, currentHour, currentMinute, true);
+        timePickerDialog.setTitle("Select ON Time");
+        timePickerDialog.show();
+    }
+
+    private void ShowDialog(final EditText editText, final String topic) {
+        final AlertDialog.Builder dialogTemp = new AlertDialog.Builder(this);
+        final LayoutInflater inflater = (LayoutInflater) this.getSystemService(LAYOUT_INFLATER_SERVICE);
+
+        final View customLayout = inflater.inflate(R.layout.dialog_temperature, (ViewGroup) findViewById(R.id.temp_layout));
+        final TextView tvTemp = (TextView)customLayout.findViewById(R.id.dialog_info);
+        tvTemp.setText(editText.getText().toString());
+        dialogTemp.setTitle(R.string.select_temp);
+        dialogTemp.setView(customLayout);
+        final SeekBar seekBar = (SeekBar) customLayout.findViewById(R.id.seek_temp);
+        seekBar.setProgress(Integer.parseInt(editText.getText().toString()));
+        if (topic == Constants.MQTT_AQU_TEMP_TMAX) {
+            seekBar.setMin(Constants.TEMP_MAX_MIN);
+            seekBar.setMax(Constants.TEMP_MAX_MAX);
+        }
+        else if (topic == Constants.MQTT_AQU_TEMP_TMIN) {
+            seekBar.setMin(Constants.TEMP_MIN_MIN);
+            seekBar.setMax(Constants.TEMP_MIN_MAX);
+        }
+
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                tvTemp.setText(Integer.toString(i));
+                //Toast.makeText(MainActivity.this, "Temp: " + i, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+
+        dialogTemp.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                //tvTemp.setText(seekBar.getProgress());
+                dialogInterface.dismiss();
+                editText.setText(tvTemp.getText());
+                String msg = tvTemp.getText().toString();
+                mqttPublishTo(topic, msg);
+            }
+        });
+
+        dialogTemp.create();
+        dialogTemp.show();
     }
 
     @Override

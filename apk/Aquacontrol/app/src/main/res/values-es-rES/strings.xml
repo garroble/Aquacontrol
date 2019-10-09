@@ -19,4 +19,5 @@
     <string name="tempmaxhint">30</string>
     <string name="tempminhint">20</string>
     <string name="menu_settings">Configuración</string>
+    <string name="select_temp">Por favor indique temperatura:</string>
 </resources>
