@@ -231,15 +231,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 String topic = Constants.MQTT_LAMP_CTL_A0ACT;
-                String topicOn = Constants.MQTT_LAMP_CTL_A0ON;
-                String topicOff = Constants.MQTT_LAMP_CTL_A0OFF;
                 if (b) {
                     String msg = Constants.MQTT_ON;
-                    EditText lampOnTime = (EditText) findViewById(R.id.lampPR1OnTime);
-                    EditText lampOffTime = (EditText) findViewById(R.id.lampPR1OffTime);
                     mqttPublishTo(topic,msg);
-                    mqttPublishTo(topicOn,lampOnTime.getText().toString());
-                    mqttPublishTo(topicOff,lampOffTime.getText().toString());
                 }
                 else {
                     String msg = Constants.MQTT_OFF;
@@ -272,15 +266,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 String topic    = Constants.MQTT_LAMP_CTL_A1ACT;
-                String topicOn  = Constants.MQTT_LAMP_CTL_A1ON;
-                String topicOff = Constants.MQTT_LAMP_CTL_A1OFF;
                 if (b) {
                     String msg = Constants.MQTT_ON;
-                    EditText lampOnTime = (EditText) findViewById(R.id.lampPR2OnTime);
-                    EditText lampOffTime = (EditText) findViewById(R.id.lampPR2OffTime);
                     mqttPublishTo(topic,msg);
-                    mqttPublishTo(topicOn,lampOnTime.getText().toString());
-                    mqttPublishTo(topicOff,lampOffTime.getText().toString());
                 }
                 else {
                     String msg = Constants.MQTT_OFF;
@@ -313,15 +301,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 String topic    = Constants.MQTT_LAMP_CTL_A2ACT;
-                String topicOn  = Constants.MQTT_LAMP_CTL_A2ON;
-                String topicOff = Constants.MQTT_LAMP_CTL_A2OFF;
                 if (b) {
                     String msg = Constants.MQTT_ON;
-                    EditText lampOnTime = (EditText) findViewById(R.id.lampPR3OnTime);
-                    EditText lampOffTime = (EditText) findViewById(R.id.lampPR3OffTime);
                     mqttPublishTo(topic,msg);
-                    mqttPublishTo(topicOn,lampOnTime.getText().toString());
-                    mqttPublishTo(topicOff,lampOffTime.getText().toString());
                 }
                 else {
                     String msg = Constants.MQTT_OFF;
@@ -629,7 +611,9 @@ public class MainActivity extends AppCompatActivity {
                 }
                 else if(topic.equals(Constants.MQTT_LAMP_CTL_A0OFF)) {
                     EditText etP1Off = (EditText) findViewById(R.id.lampPR1OffTime);
-                    etP1Off.setText(message.toString());
+                    String s_time = message.toString();
+                    String loctime = getHourUTCtoLocal(s_time);
+                    etP1Off.setText(loctime);
                 }
                 else if(topic.equals(Constants.MQTT_LAMP_CTL_A1ACT)) {
                     Switch swLampP2 = (Switch) findViewById(R.id.lampProg2SW);
@@ -637,11 +621,15 @@ public class MainActivity extends AppCompatActivity {
                 }
                 else if(topic.equals(Constants.MQTT_LAMP_CTL_A1ON)) {
                     EditText etP2On = (EditText) findViewById(R.id.lampPR2OnTime);
-                    etP2On.setText(message.toString());
+                    String s_time = message.toString();
+                    String loctime = getHourUTCtoLocal(s_time);
+                    etP2On.setText(loctime);
                 }
                 else if(topic.equals(Constants.MQTT_LAMP_CTL_A1OFF)) {
                     EditText etP2Off = (EditText) findViewById(R.id.lampPR2OffTime);
-                    etP2Off.setText(message.toString());
+                    String s_time = message.toString();
+                    String loctime = getHourUTCtoLocal(s_time);
+                    etP2Off.setText(loctime);
                 }
                 else if(topic.equals(Constants.MQTT_LAMP_CTL_A2ACT)) {
                     Switch swLampP3 = (Switch) findViewById(R.id.lampProg3SW);
@@ -649,11 +637,15 @@ public class MainActivity extends AppCompatActivity {
                 }
                 else if(topic.equals(Constants.MQTT_LAMP_CTL_A2ON)) {
                     EditText etP3On = (EditText) findViewById(R.id.lampPR3OnTime);
-                    etP3On.setText(message.toString());
+                    String s_time = message.toString();
+                    String loctime = getHourUTCtoLocal(s_time);
+                    etP3On.setText(loctime);
                 }
                 else if(topic.equals(Constants.MQTT_LAMP_CTL_A2OFF)) {
                     EditText etP3Off = (EditText) findViewById(R.id.lampPR3OffTime);
-                    etP3Off.setText(message.toString());
+                    String s_time = message.toString();
+                    String loctime = getHourUTCtoLocal(s_time);
+                    etP3Off.setText(loctime);
                 }
                 else {
 
