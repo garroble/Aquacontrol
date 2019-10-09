@@ -15,6 +15,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -390,15 +391,20 @@ public class MainActivity extends AppCompatActivity {
 
     private void showTimePicker(final String topic, final EditText et_Time) {
         Calendar calendar = Calendar.getInstance();
+        final int currentDay = calendar.get(Calendar.DAY_OF_MONTH);
+        final int currentMonth = calendar.get(Calendar.MONTH);
+        final int currentYear = calendar.get(Calendar.YEAR);
         int currentHour = calendar.get(Calendar.HOUR_OF_DAY);
         int currentMinute = calendar.get(Calendar.MINUTE);
         TimePickerDialog timePickerDialog = new TimePickerDialog(MainActivity.this, new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker timePicker, int hourOfDay, int minutes) {
                 String s_time = "0:00";
-                s_time = String.format("%02d:%02d", hourOfDay, minutes);
-                et_Time.setText(s_time);
-                mqttPublishTo(topic,s_time);
+                s_time = String.format("%02d-%02d-%04d %02d:%02d:00", currentDay, currentMonth, currentYear, hourOfDay, minutes);
+                et_Time.setText(s_time.substring(11,16));
+                String s_timeUTC = getDateLocalToUTC(s_time);
+                s_timeUTC = s_timeUTC.substring(11, 16);
+                mqttPublishTo(topic,s_timeUTC);
             }
         }, currentHour, currentMinute, true);
         timePickerDialog.setTitle("Select ON Time");
@@ -575,12 +581,12 @@ public class MainActivity extends AppCompatActivity {
                 }
                 else if(topic.equals(Constants.MQTT_AQU_RST)) {
                     TextView tvActive = (TextView) findViewById(R.id.timeActive);
-                    String   time = getDate(message.toString());
+                    String   time = getDateUTCtoLocal(message.toString());
                     tvActive.setText(time);
                 }
                 else if(topic.equals(Constants.MQTT_AQU_TIME)) {
                     TextView tvLast = (TextView) findViewById(R.id.lastMsg);
-                    String   time = getDate(message.toString());
+                    String   time = getDateUTCtoLocal(message.toString());
                     tvLast.setText(time);
                 }
                 else if(topic.equals(Constants.MQTT_AQU_FILT_STA)) {
@@ -617,7 +623,9 @@ public class MainActivity extends AppCompatActivity {
                 }
                 else if(topic.equals(Constants.MQTT_LAMP_CTL_A0ON)) {
                     EditText etP1On = (EditText) findViewById(R.id.lampPR1OnTime);
-                    etP1On.setText(message.toString());
+                    String s_time = message.toString();
+                    String loctime = getHourUTCtoLocal(s_time);
+                    etP1On.setText(loctime);
                 }
                 else if(topic.equals(Constants.MQTT_LAMP_CTL_A0OFF)) {
                     EditText etP1Off = (EditText) findViewById(R.id.lampPR1OffTime);
@@ -668,7 +676,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private String getDate(String ourDate)
+    private String getDateUTCtoLocal(String ourDate)
     {
         try
         {
@@ -683,6 +691,33 @@ public class MainActivity extends AppCompatActivity {
         catch (Exception e)
         {
             ourDate = "00-00-0000 00:00";
+        }
+        return ourDate;
+    }
+
+    private String getHourUTCtoLocal(String s_hourmin) {
+        Calendar calendar = Calendar.getInstance();
+        final int currentDay = calendar.get(Calendar.DAY_OF_MONTH);
+        final int currentMonth = calendar.get(Calendar.MONTH)+1;
+        final int currentYear = calendar.get(Calendar.YEAR);
+        String  s_utctime = String.format("%04d-%02d-%02dT"+s_hourmin.substring(0,2)+":"+s_hourmin.substring(3)+":00Z", currentYear, currentMonth, currentDay);
+        String  s_loctime = getDateUTCtoLocal(s_utctime);
+        return  s_loctime.substring(11,16);
+    }
+
+    private String getDateLocalToUTC(String ourDate)
+    {
+        try {
+            SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+            formatter.setTimeZone(TimeZone.getDefault());
+            Date localDate = formatter.parse(ourDate);
+
+            SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+            dateFormatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+            ourDate = dateFormatter.format(localDate);
+        }
+        catch (Exception e) {
+            ourDate = "0000-00-00'T'00:00:00'Z'";
         }
         return ourDate;
     }
