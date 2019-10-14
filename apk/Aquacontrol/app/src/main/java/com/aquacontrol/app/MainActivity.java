@@ -125,18 +125,17 @@ public class MainActivity extends AppCompatActivity {
         /*      AERATOR     */
         /********************/
 
-        Switch swAerator = (Switch) findViewById(R.id.aeratorSW);
+        final Switch swAerator = (Switch) findViewById(R.id.aeratorSW);
         swAerator.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 String topic = Constants.MQTT_AERA_CTL;
                 if (b) {
                     String msg = Constants.MQTT_ON;
-                    mqttPublishTo(topic,msg);
-                }
-                else {
+                    mqttPublishTo(topic, msg);
+                } else {
                     String msg = Constants.MQTT_OFF;
-                    mqttPublishTo(topic,msg);
+                    mqttPublishTo(topic, msg);
                 }
             }
         });
@@ -661,10 +660,10 @@ public class MainActivity extends AppCompatActivity {
 
     private void aquaCtl(Switch sw,MqttMessage message ) {
         if (message.toString().matches(Constants.MQTT_ON)) {
-            sw.setChecked(true);
+            if(!sw.isChecked()) { sw.setChecked(true); }
         }
         else {
-            sw.setChecked(false);
+            if(sw.isChecked()) { sw.setChecked(false); }
         }
     }
 
