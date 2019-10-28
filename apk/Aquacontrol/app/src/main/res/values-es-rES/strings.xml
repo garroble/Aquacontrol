@@ -21,4 +21,8 @@
     <string name="menu_settings">Configuración</string>
     <string name="select_temp">Por favor indique temperatura:</string>
     <string name="menu_broker">Configuración Broker MQTT</string>
+    <string name="tempalarm">Alarma de temperatura en el acuario</string>
+    <string name="tempCurrent">Temperatura actual</string>
+    <string name="temphigh">ºC es mayor de</string>
+    <string name="templow">ºC es menor de</string>
 </resources>

@@ -21,4 +21,8 @@
     <string name="tempminhint">20</string>
     <string name="temppos">TMax</string>
     <string name="select_temp">Please selec temperature:</string>
+    <string name="tempalarm">Temperature Alarm on Aquarium</string>
+    <string name="tempCurrent">Current temperature </string>
+    <string name="templow">ºC is below </string>
+    <string name="temphigh">ºC is over </string>
 </resources>

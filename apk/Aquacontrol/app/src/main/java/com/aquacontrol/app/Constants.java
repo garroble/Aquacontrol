@@ -8,6 +8,9 @@ public class Constants {
     public static final String PREF_BROKER_USER     = "broker_user";
     public static final String PREF_BROKER_PASS     = "broker_pass";
 
+    public static final String NOTIFICATION_CHANNEL_ID = "AQUACTL_channel_01";
+    public static final String NOTIFICATION_CHANNEL_NAME = "Aquacontrol_Channel";
+
     public static final String MQTT_AQU_VERS        = "aquarium/version";
     public static final String MQTT_AQU_RST         = "aquarium/reset";
     public static final String MQTT_AQU_IP          = "aquarium/ip";
