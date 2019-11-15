@@ -374,7 +374,7 @@ public class MainActivity extends AppCompatActivity {
     private void showTimePicker(final String topic, final EditText et_Time) {
         Calendar calendar = Calendar.getInstance();
         final int currentDay = calendar.get(Calendar.DAY_OF_MONTH);
-        final int currentMonth = calendar.get(Calendar.MONTH);
+        final int currentMonth = calendar.get(Calendar.MONTH) + 1;
         final int currentYear = calendar.get(Calendar.YEAR);
         int currentHour = calendar.get(Calendar.HOUR_OF_DAY);
         int currentMinute = calendar.get(Calendar.MINUTE);
