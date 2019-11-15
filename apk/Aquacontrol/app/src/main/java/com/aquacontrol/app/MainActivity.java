@@ -403,11 +403,17 @@ public class MainActivity extends AppCompatActivity {
 
         final View customLayout = inflater.inflate(R.layout.dialog_temperature, (ViewGroup) findViewById(R.id.temp_layout));
         final TextView tvTemp = (TextView)customLayout.findViewById(R.id.dialog_info);
-        tvTemp.setText(editText.getText().toString());
+        String  s_temp = editText.getText().toString();
+        tvTemp.setText(s_temp);
         dialogTemp.setTitle(R.string.select_temp);
         dialogTemp.setView(customLayout);
         final SeekBar seekBar = (SeekBar) customLayout.findViewById(R.id.seek_temp);
-        seekBar.setProgress(Integer.parseInt(editText.getText().toString()));
+        if (s_temp.isEmpty()) {
+            seekBar.setProgress(20);
+        }
+        else {
+            seekBar.setProgress(Integer.parseInt(editText.getText().toString()));
+        }
         if (topic == Constants.MQTT_AQU_TEMP_TMAX) {
             seekBar.setMin(Constants.TEMP_MAX_MIN);
             seekBar.setMax(Constants.TEMP_MAX_MAX);
