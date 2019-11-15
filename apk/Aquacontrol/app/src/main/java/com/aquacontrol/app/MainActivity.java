@@ -2,6 +2,8 @@ package com.aquacontrol.app;
 
 import android.app.AlertDialog;
 import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -11,6 +13,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -46,6 +49,7 @@ import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.eclipse.paho.client.mqttv3.util.Strings;
 
 import java.io.UnsupportedEncodingException;
 
@@ -91,6 +95,7 @@ public class MainActivity extends AppCompatActivity {
             password = sharedpreferences.getString(Constants.PREF_BROKER_PASS, "");
         }
 
+        // MQTT Launch
         pahoMqttClient = new PahoMqttClient();
         client = pahoMqttClient.getMqttClient(  getApplicationContext(),                        // Connect to MQTT Broker
                                                 urlBroker,
@@ -125,18 +130,17 @@ public class MainActivity extends AppCompatActivity {
         /*      AERATOR     */
         /********************/
 
-        Switch swAerator = (Switch) findViewById(R.id.aeratorSW);
+        final Switch swAerator = (Switch) findViewById(R.id.aeratorSW);
         swAerator.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 String topic = Constants.MQTT_AERA_CTL;
                 if (b) {
                     String msg = Constants.MQTT_ON;
-                    mqttPublishTo(topic,msg);
-                }
-                else {
+                    mqttPublishTo(topic, msg);
+                } else {
                     String msg = Constants.MQTT_OFF;
-                    mqttPublishTo(topic,msg);
+                    mqttPublishTo(topic, msg);
                 }
             }
         });
@@ -551,6 +555,20 @@ public class MainActivity extends AppCompatActivity {
                 if(topic.equals(Constants.MQTT_AQU_TEMP)) {
                     //Add custom message handling here (if topic = "aquarium/temperature")
                     TextView tvTemperature = (TextView) findViewById(R.id.temperature);
+                    EditText etTempMax = (EditText) findViewById(R.id.tempMax);
+                    EditText etTempMin = (EditText) findViewById(R.id.tempMin);
+                    int i_minTemp = Integer.parseInt(etTempMin.getText().toString());
+                    int i_maxTemp = Integer.parseInt(etTempMax.getText().toString());
+                    if (Integer.parseInt(message.toString()) < i_minTemp) {
+                        sendNotification(getString(R.string.tempCurrent)
+                                + " " + message.toString() + getString(R.string.templow)
+                                + " " + i_minTemp +"ºC");
+                    }
+                    else if (Integer.parseInt(message.toString()) > i_maxTemp) {
+                        sendNotification(getString(R.string.tempCurrent)
+                                + " " + message.toString() + getString(R.string.temphigh)
+                                + " " + i_maxTemp +"ºC");
+                    }
                     tvTemperature.setText(message.toString());
                 }
                 else if(topic.equals(Constants.MQTT_AQU_VERS)) {
@@ -661,10 +679,10 @@ public class MainActivity extends AppCompatActivity {
 
     private void aquaCtl(Switch sw,MqttMessage message ) {
         if (message.toString().matches(Constants.MQTT_ON)) {
-            sw.setChecked(true);
+            if(!sw.isChecked()) { sw.setChecked(true); }
         }
         else {
-            sw.setChecked(false);
+            if(sw.isChecked()) { sw.setChecked(false); }
         }
     }
 
@@ -712,5 +730,27 @@ public class MainActivity extends AppCompatActivity {
             ourDate = "0000-00-00'T'00:00:00'Z'";
         }
         return ourDate;
+    }
+
+    public void sendNotification(String s_notification) {
+        NotificationManager notificationManager = getSystemService(NotificationManager.class);
+        String channelId    = Constants.NOTIFICATION_CHANNEL_ID;
+        CharSequence name   = Constants.NOTIFICATION_CHANNEL_NAME;
+        int importance      = NotificationManager.IMPORTANCE_HIGH;
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(channelId, name, importance);
+            channel.setDescription("Aquacontrol");
+            notificationManager.createNotificationChannel(channel);
+        }
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, channelId)
+                .setSmallIcon(R.drawable.ic_warning_black_24dp)
+                .setContentTitle(getString(R.string.tempalarm))
+                .setContentText(s_notification)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setAutoCancel(true);
+
+        notificationManager.notify(001, builder.build());
     }
 }

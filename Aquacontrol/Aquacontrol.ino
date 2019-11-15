@@ -463,14 +463,13 @@ void heatLoopCtl() {
     heaterSet(false);
     Serial.println(" ---> ALARM: Over temperature");
   }
-  else if( (Aquarium.Temperature.f_Current < Aquarium.Temperature.f_Max) &&
-           (Aquarium.Temperature.f_Current > Aquarium.Temperature.f_Min) ) {
+  else if (Aquarium.Temperature.f_Current < Aquarium.Temperature.f_Min) {
     Aquarium.Heater.b_Control = true;
     heaterSet(true);
-  } else {
-    Aquarium.Heater.b_Control = false;
-    heaterSet(false);
     Serial.println(" ---> ALARM: Under temperature");
+  } else {
+    Aquarium.Heater.b_Control = true;
+    heaterSet(true);
   }
 }
 
