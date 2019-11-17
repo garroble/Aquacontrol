@@ -229,30 +229,30 @@ void mqtt_callback(char* topic, byte* payload, unsigned int length) {
     else                      { lampSetActiveProg(0,false); } // off
   }   
   else if (strcmp(topic, MQTT_LAMP_CTL_A0ON) == 0) {
-    lampSetAutoProg(0,true,LAMP_ON,payload);
+    lampSetAutoProg(0,LAMP_ON,payload);
   } 
   else if (strcmp(topic, MQTT_LAMP_CTL_A0OFF) == 0) {
-    lampSetAutoProg(0,true,LAMP_OFF,payload);
+    lampSetAutoProg(0,LAMP_OFF,payload);
   }
   else if (strcmp(topic, MQTT_LAMP_CTL_A1ACT) == 0) {
     if (payload[1] == n_BYTE) { lampSetActiveProg(1,true); }  // on
     else                      { lampSetActiveProg(1,false); } // off
   } 
   else if (strcmp(topic, MQTT_LAMP_CTL_A1ON) == 0) {
-    lampSetAutoProg(1,true,LAMP_ON,payload);
+    lampSetAutoProg(1,LAMP_ON,payload);
   } 
   else if (strcmp(topic, MQTT_LAMP_CTL_A1OFF) == 0) {
-    lampSetAutoProg(1,true,LAMP_OFF,payload);
+    lampSetAutoProg(1,LAMP_OFF,payload);
   }
   else if (strcmp(topic, MQTT_LAMP_CTL_A2ACT) == 0) {
     if (payload[1] == n_BYTE) { lampSetActiveProg(2,true); }  // on
     else                      { lampSetActiveProg(2,false); } // off
   } 
   else if (strcmp(topic, MQTT_LAMP_CTL_A2ON) == 0) {
-    lampSetAutoProg(2,true,LAMP_ON,payload);
+    lampSetAutoProg(2,LAMP_ON,payload);
   } 
   else if (strcmp(topic, MQTT_LAMP_CTL_A2OFF) == 0) {
-    lampSetAutoProg(2,true,LAMP_OFF,payload);
+    lampSetAutoProg(2,LAMP_OFF,payload);
   }
   else if (strcmp(topic, MQTT_AQU_TEMP_TMAX) == 0) {
     tempSet(true, payload);
@@ -351,7 +351,7 @@ void pubResetData() {
   i_datetime = timeString.indexOf("T");
   Serial.print("DATE: ");
   Serial.print(timeString.substring(0,i_datetime));
-  Serial.print(" | TIME (GMT+1): ");
+  Serial.print(" | TIME (UTC): ");
   Serial.println(timeString.substring(i_datetime+1, timeString.length()-1));
   mqtt_client.publish(MQTT_AQU_RST, timeString.c_str(), true);
   if (Aquarium.Lamp.b_Status)    { mqtt_client.publish(MQTT_AQU_LAMP_STA, "on", true); }
@@ -389,6 +389,7 @@ void pubTimestamp() {
 // Publish Aquarium Temperature
 void pubTemperature() {
   String  tempString;
+  TempSensor.requestTemperatures();
   Aquarium.Temperature.f_Current = TempSensor.getTempCByIndex(0);
   tempString = Aquarium.Temperature.f_Current;
   mqtt_client.publish(MQTT_AQU_TEMP, tempString.c_str(), true);
@@ -458,7 +459,10 @@ void heaterSetManual(bool b_turn) {
 // heatLoopCtl
 // Control heater if temperature exceeds maximum or minimum temperature.
 void heatLoopCtl() {
-  if (Aquarium.Temperature.f_Current > Aquarium.Temperature.f_Max) {
+  if (Aquarium.Temperature.f_Current == DEVICE_DISCONNECTED_C) {
+    Serial.println(" ---> ALARM: No thermistor connected");
+  }
+  else if (Aquarium.Temperature.f_Current > Aquarium.Temperature.f_Max) {
     Aquarium.Heater.b_Control = false;
     heaterSet(false);
     Serial.println(" ---> ALARM: Over temperature");
@@ -644,7 +648,7 @@ void lampSetActiveProg(byte b_Prog, bool b_ProgOn) {
 
 // lampSetAutoProg
 // Set Lamp Automatic Programs data
-void lampSetAutoProg(byte b_Prog, bool b_ProgOn,bool b_OnOff, byte* message) {
+void lampSetAutoProg(byte b_Prog, bool b_OnOff, byte* message) {
   // Expect 09:25 or 21:25
   int   i_hour   = 0;
   int   i_minute = 0;
@@ -654,19 +658,17 @@ void lampSetAutoProg(byte b_Prog, bool b_ProgOn,bool b_OnOff, byte* message) {
   Serial.print("Set Auto Lamp ");
   Serial.print(b_Prog);
   //Aquarium.Lamp.Program[b_Prog].b_Active = b_ProgOn;
-  if (b_ProgOn) {
-    Serial.print(" program to ");
-    if (b_OnOff) {
-      Serial.print("turn ON the ligths at ");
-      Aquarium.Lamp.Program[b_Prog].i_ONtime = i_hour * 60 + i_minute;
-    }
-    else {
-      Serial.print("turn OFF the ligths at ");
-      Aquarium.Lamp.Program[b_Prog].i_OFFtime = i_hour * 60 + i_minute;
-    }
-    sprintf(c_time, "%02d:%02d", i_hour, i_minute);
-    Serial.println(c_time);
+  Serial.print(" program to ");
+  if (b_OnOff) {
+    Serial.print("turn ON the ligths at ");
+    Aquarium.Lamp.Program[b_Prog].i_ONtime = i_hour * 60 + i_minute;
   }
+  else {
+    Serial.print("turn OFF the ligths at ");
+    Aquarium.Lamp.Program[b_Prog].i_OFFtime = i_hour * 60 + i_minute;
+  }
+  sprintf(c_time, "%02d:%02d", i_hour, i_minute);
+  Serial.println(c_time);
   pubTimestamp();  
 }
 
@@ -674,6 +676,7 @@ void lampSetAutoProg(byte b_Prog, bool b_ProgOn,bool b_OnOff, byte* message) {
 // When set to auto, control the lamps based on ON/OFF hours.
 void lampLoopCtl() {
   int       i_Now = 0;
+  bool      b_LampSet = false;
   
   if (Aquarium.Lamp.b_AutoMode == true) {
     if (wifi_status == WL_CONNECTED) {  
@@ -689,23 +692,18 @@ void lampLoopCtl() {
         if (Aquarium.Lamp.Program[i_Cont].i_OFFtime > Aquarium.Lamp.Program[i_Cont].i_ONtime) {
           if( (i_Now >= Aquarium.Lamp.Program[i_Cont].i_ONtime) &&
               (i_Now <  Aquarium.Lamp.Program[i_Cont].i_OFFtime) ) {
-            lampSet(true);
-          }
-          else {
-            lampSet(false);
+            b_LampSet = true;
           }
         }
         else {
           if( (i_Now >= Aquarium.Lamp.Program[i_Cont].i_ONtime) ||
               (i_Now <  Aquarium.Lamp.Program[i_Cont].i_OFFtime) ) {
-            lampSet(true);
-          }
-          else {
-            lampSet(false);
+            b_LampSet = true;
           }
         }
       }
     }
+    lampSet(b_LampSet);
   }
 }
 

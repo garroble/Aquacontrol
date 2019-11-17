@@ -3,7 +3,7 @@
 
 #define   AQU_DEBUG
 
-#define   VERSION       ("0.0.2")
+#define   VERSION       ("0.0.3")
 
 #define   RELAY_LAMP    (4)
 #define   RELAY_AERA    (5)
