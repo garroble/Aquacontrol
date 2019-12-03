@@ -10,6 +10,17 @@ And here on GitHub the repository includes:
 - Aquacontrol. ESP8266 firmware developed on [Arduino IDE](https://www.arduino.cc/en/main/software).
 - me. Case developed on [FreeCAD](https://www.freecadweb.org/).
 
+## Setup
+Aquacontrol consists on one PCB which controls the most common technics on the beginners aquarium:
+- Heater, to heat the water usually around 25ºC.
+- Filter, to keep the biological and mechanical filtering of the water running.
+- Lamp, to illuminate the aquarium and improve plants growing.
+- Aerator, to improve the exchange of O2.
+
+To ease the setup and to avoid cutting the equipment cables, I have used a Simon set:
+- Simon 27731-65. Surface mount pack for four sockets.
+- Simon 27432-65. 4 Schuko Sockets
+
 ## Application
 The APK includes a Main Activity to control the Aquarium and a Settings activity con configure MQTT Broker.
 
